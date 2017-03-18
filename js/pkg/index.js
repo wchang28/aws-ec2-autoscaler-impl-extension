@@ -5,6 +5,29 @@ var $node = require("rest-node");
 var rcf = require("rcf");
 var eventStreamPathname = '/services/events/event_stream';
 var clientOptions = { reconnetIntervalMS: 5000 };
+// server should implement the following pathname
+/*
+    /services/events/event_stream
+    /services/translate_to_worker_keys
+    /services/estimate_workers_launch_request
+    /services/launch_instances
+    /services/terminate_instances
+    /services/info
+    /services/setup
+    /services/setup/get_cpus_per_instance
+    /services/setup/set_cpus_per_instance
+    /services/setup/worker_characteristic
+    /services/setup/worker_characteristic/get_key_name
+    /services/setup/worker_characteristic/set_key_name
+    /services/setup/worker_characteristic/get_instance_type
+    /services/setup/worker_characteristic/set_instance_type
+    /services/setup/worker_characteristic/get_image_id
+    /services/setup/worker_characteristic/set_image_id
+    /services/setup/worker_characteristic/get_security_group_id
+    /services/setup/worker_characteristic/set_security_group_id
+    /services/setup/worker_characteristic/get_subnet_id
+    /services/setup/worker_characteristic/set_subnet_id
+*/
 var ApiCore = (function () {
     function ApiCore(connectOptions) {
         var $driver = $node.get();
@@ -33,6 +56,7 @@ var WorkerCharacteristicSetup = (function () {
     function WorkerCharacteristicSetup(api) {
         this.api = api;
     }
+    WorkerCharacteristicSetup.prototype.toJSON = function () { return this.api.$J("GET", '/', {}); };
     WorkerCharacteristicSetup.prototype.getKeyName = function () { return this.api.$J("GET", '/get_key_name', {}); };
     WorkerCharacteristicSetup.prototype.setKeyName = function (value) { return this.api.$J("POST", '/set_key_name', value); };
     WorkerCharacteristicSetup.prototype.getInstanceType = function () { return this.api.$J("GET", '/get_instance_type', {}); };
@@ -86,11 +110,39 @@ var Implementation = (function () {
     });
     return Implementation;
 }());
+/*
+    /info
+    /setup
+    /setup/get_cpus_per_instance
+    /setup/set_cpus_per_instance
+    /setup/worker_characteristic
+    /setup/worker_characteristic/get_key_name
+    /setup/worker_characteristic/set_key_name
+    /setup/worker_characteristic/get_instance_type
+    /setup/worker_characteristic/set_instance_type
+    /setup/worker_characteristic/get_image_id
+    /setup/worker_characteristic/set_image_id
+    /setup/worker_characteristic/get_security_group_id
+    /setup/worker_characteristic/set_security_group_id
+    /setup/worker_characteristic/get_subnet_id
+    /setup/worker_characteristic/set_subnet_id
+*/
 // factory function
 var factory = function (getImpl, connectOptions, onChange) {
     var router = express.Router();
-    router.get('/info', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (impl) {
+    var setupRouter = express.Router();
+    router.get('/info', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.getInfo();
+    }));
+    router.use('/setup', setupRouter);
+    setupRouter.get('/', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.toJSON();
+    }));
+    setupRouter.get('/get_cpus_per_instance', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.getCPUsPerInstance();
+    }));
+    setupRouter.post('/set_cpus_per_instance', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.setCPUsPerInstance(req.body);
     }));
     var impl = new Implementation(connectOptions, onChange);
     return Promise.resolve([impl, router]);

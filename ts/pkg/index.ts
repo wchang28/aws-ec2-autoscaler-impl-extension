@@ -2,13 +2,37 @@ import {IAutoScalerImplementation, IWorker, WorkerKey, IAutoScalableState, IWork
 import * as express from 'express';
 import * as core from 'express-serve-static-core';
 import {AutoScalerImplementationFactory, AutoScalerImplementationOnChangeHandler, GetAutoScalerImplementationProc, getRequestHandlerForImplementation} from 'grid-autoscaler-impl-pkg';
-import {ImplementationSetup as IImplementationSetup, WorkerCharacteristicSetup as IWorkerCharacteristicSetup, ImplementationJSON} from "aws-ec2-autoscaler-impl";
+import {IWorkerCharacteristic, IImplementationSetup, IWorkerCharacteristicSetup, ImplementationJSON} from "aws-ec2-autoscaler-impl";
 import * as $node from 'rest-node';
 import * as rcf from 'rcf';
 import { EC2 } from 'aws-sdk'
 
 let eventStreamPathname = '/services/events/event_stream';
 let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
+
+// server should implement the following pathname
+/*
+    /services/events/event_stream
+    /services/translate_to_worker_keys
+    /services/estimate_workers_launch_request
+    /services/launch_instances
+    /services/terminate_instances
+    /services/info
+    /services/setup
+    /services/setup/get_cpus_per_instance
+    /services/setup/set_cpus_per_instance
+    /services/setup/worker_characteristic
+    /services/setup/worker_characteristic/get_key_name
+    /services/setup/worker_characteristic/set_key_name
+    /services/setup/worker_characteristic/get_instance_type
+    /services/setup/worker_characteristic/set_instance_type
+    /services/setup/worker_characteristic/get_image_id
+    /services/setup/worker_characteristic/set_image_id
+    /services/setup/worker_characteristic/get_security_group_id
+    /services/setup/worker_characteristic/set_security_group_id
+    /services/setup/worker_characteristic/get_subnet_id
+    /services/setup/worker_characteristic/set_subnet_id
+*/
 
 class ApiCore {
     private __authApi: rcf.AuthorizedRestApi;
@@ -36,16 +60,17 @@ class ApiCore {
 
 class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
     constructor(private api: ApiCore) {}
+    toJSON(): Promise<IWorkerCharacteristic> {return this.api.$J("GET", '/', {});}
     getKeyName(): Promise<string> {return this.api.$J("GET", '/get_key_name', {});}
-    setKeyName(value: number): Promise<string> {return this.api.$J("POST", '/set_key_name', value);}
+    setKeyName(value: string): Promise<string> {return this.api.$J("POST", '/set_key_name', value);}
     getInstanceType(): Promise<EC2.InstanceType> {return this.api.$J("GET", '/get_instance_type', {});}
-    setInstanceType(value: number): Promise<EC2.InstanceType> {return this.api.$J("POST", '/set_instance_type', value);}
+    setInstanceType(value: EC2.InstanceType): Promise<EC2.InstanceType> {return this.api.$J("POST", '/set_instance_type', value);}
     getImageId(): Promise<string> {return this.api.$J("GET", '/get_image_id', {});}
-    setImageId(value: number): Promise<string> {return this.api.$J("POST", '/set_image_id', value);}
+    setImageId(value: string): Promise<string> {return this.api.$J("POST", '/set_image_id', value);}
     getSecurityGroupId(): Promise<string> {return this.api.$J("GET", '/get_security_group_id', {});}
-    setSecurityGroupId(value: number): Promise<string> {return this.api.$J("POST", '/set_security_group_id', value);}
+    setSecurityGroupId(value: string): Promise<string> {return this.api.$J("POST", '/set_security_group_id', value);}
     getSubnetId(): Promise<string> {return this.api.$J("GET", '/get_subnet_id', {});}
-    setSubnetId(value: number): Promise<string> {return this.api.$J("POST", '/set_subnet_id', value);}
+    setSubnetId(value: string): Promise<string> {return this.api.$J("POST", '/set_subnet_id', value);}
 }
 
 class Setup implements IImplementationSetup {
@@ -82,11 +107,42 @@ class Implementation implements IAutoScalerImplementation {
     get Setup(): IImplementationSetup { return new Setup(this.api.subpath('/services/setup'));}
 }
 
+/*
+    /info
+    /setup
+    /setup/get_cpus_per_instance
+    /setup/set_cpus_per_instance
+    /setup/worker_characteristic
+    /setup/worker_characteristic/get_key_name
+    /setup/worker_characteristic/set_key_name
+    /setup/worker_characteristic/get_instance_type
+    /setup/worker_characteristic/set_instance_type
+    /setup/worker_characteristic/get_image_id
+    /setup/worker_characteristic/set_image_id
+    /setup/worker_characteristic/get_security_group_id
+    /setup/worker_characteristic/set_security_group_id
+    /setup/worker_characteristic/get_subnet_id
+    /setup/worker_characteristic/set_subnet_id
+*/
+
 // factory function
 let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementationProc, connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) => {
     let router = express.Router();
-    router.get('/info', getRequestHandlerForImplementation(getImpl, (impl: Implementation) => {
+    let setupRouter = express.Router();
+    
+    router.get('/info', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
         return impl.getInfo();
+    }));
+    router.use('/setup', setupRouter);
+
+    setupRouter.get('/', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.toJSON();
+    }));
+    setupRouter.get('/get_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.getCPUsPerInstance();
+    }));
+    setupRouter.post('/set_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.setCPUsPerInstance(req.body);
     }));
     let impl = new Implementation(connectOptions, onChange);
     return Promise.resolve<[IAutoScalerImplementation, express.Router]>([impl, router]);
