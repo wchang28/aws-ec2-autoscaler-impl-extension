@@ -9,6 +9,7 @@
       "watch": true
   },
   "files": [
-    "./ts/app.ts"
+    "./ts/pkg/index.ts",
+    "./ts/server/app.ts"
   ]
 }
