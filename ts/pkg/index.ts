@@ -36,8 +36,7 @@ let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
 
 class ApiCore {
     private __authApi: rcf.AuthorizedRestApi;
-    constructor(connectOptions: rcf.ApiInstanceConnectOptions) {
-        let $driver = $node.get();
+    constructor($driver: rcf.$Driver, connectOptions: rcf.ApiInstanceConnectOptions) {
         this.__authApi = new rcf.AuthorizedRestApi($driver, rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
     }
     $J(method: string, pathname: string, data: any) : Promise<any> {
@@ -51,10 +50,10 @@ class ApiCore {
         });
     }
     $M() : rcf.IMessageClient {return this.__authApi.$M(eventStreamPathname, clientOptions);}
-    subpath(pathname: string): ApiCore {
+    mount(pathname: string): ApiCore {
         let access:rcf.OAuth2Access = (this.__authApi.access ? JSON.parse(JSON.stringify(this.__authApi.access)) : {});
         access.instance_url = this.__authApi.instance_url + pathname;
-        return new ApiCore(access);
+        return new ApiCore(this.__authApi.$driver, access);
     }
 }
 
@@ -78,14 +77,14 @@ class Setup implements IImplementationSetup {
     toJSON() : Promise<ImplementationJSON> {return this.api.$J("GET", '/', {});}
     getCPUsPerInstance() : Promise<number> {return this.api.$J("GET", '/get_cpus_per_instance', {});}
     setCPUsPerInstance(value: number) : Promise<number> {return this.api.$J("POST", '/set_cpus_per_instance', value);}
-    get WorkerCharacteristic(): IWorkerCharacteristicSetup {return new WorkerCharacteristicSetup(this.api.subpath('/worker_characteristic'));}
+    get WorkerCharacteristic(): IWorkerCharacteristicSetup {return new WorkerCharacteristicSetup(this.api.mount('/worker_characteristic'));}
 }
 
 class Implementation implements IAutoScalerImplementation {
     private api: ApiCore;
     private msgClient: rcf.IMessageClient;
     constructor(connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) {
-        this.api = new ApiCore(rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
+        this.api = new ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', (conn_id:string) => {
             let sub_id = this.msgClient.subscribe('/topic/implementation/setup'
@@ -104,7 +103,7 @@ class Implementation implements IAutoScalerImplementation {
     TerminateInstances(workerKeys: WorkerKey[]) : Promise<WorkerInstance[]> {return this.api.$J("POST", '/services/terminate_instances', workerKeys);}
     getInfo() : Promise<AutoScalerImplementationInfo> {return this.api.$J("GET", '/services/info', {});}
 
-    get Setup(): IImplementationSetup { return new Setup(this.api.subpath('/services/setup'));}
+    get Setup(): IImplementationSetup { return new Setup(this.api.mount('/services/setup'));}
 }
 
 /*

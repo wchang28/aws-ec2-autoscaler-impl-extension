@@ -29,8 +29,7 @@ var clientOptions = { reconnetIntervalMS: 5000 };
     /services/setup/worker_characteristic/set_subnet_id
 */
 var ApiCore = (function () {
-    function ApiCore(connectOptions) {
-        var $driver = $node.get();
+    function ApiCore($driver, connectOptions) {
         this.__authApi = new rcf.AuthorizedRestApi($driver, rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
     }
     ApiCore.prototype.$J = function (method, pathname, data) {
@@ -45,10 +44,10 @@ var ApiCore = (function () {
         });
     };
     ApiCore.prototype.$M = function () { return this.__authApi.$M(eventStreamPathname, clientOptions); };
-    ApiCore.prototype.subpath = function (pathname) {
+    ApiCore.prototype.mount = function (pathname) {
         var access = (this.__authApi.access ? JSON.parse(JSON.stringify(this.__authApi.access)) : {});
         access.instance_url = this.__authApi.instance_url + pathname;
-        return new ApiCore(access);
+        return new ApiCore(this.__authApi.$driver, access);
     };
     return ApiCore;
 }());
@@ -77,7 +76,7 @@ var Setup = (function () {
     Setup.prototype.getCPUsPerInstance = function () { return this.api.$J("GET", '/get_cpus_per_instance', {}); };
     Setup.prototype.setCPUsPerInstance = function (value) { return this.api.$J("POST", '/set_cpus_per_instance', value); };
     Object.defineProperty(Setup.prototype, "WorkerCharacteristic", {
-        get: function () { return new WorkerCharacteristicSetup(this.api.subpath('/worker_characteristic')); },
+        get: function () { return new WorkerCharacteristicSetup(this.api.mount('/worker_characteristic')); },
         enumerable: true,
         configurable: true
     });
@@ -86,7 +85,7 @@ var Setup = (function () {
 var Implementation = (function () {
     function Implementation(connectOptions, onChange) {
         var _this = this;
-        this.api = new ApiCore(rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
+        this.api = new ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', function (conn_id) {
             var sub_id = _this.msgClient.subscribe('/topic/implementation/setup', function (msg) {
@@ -104,7 +103,7 @@ var Implementation = (function () {
     Implementation.prototype.TerminateInstances = function (workerKeys) { return this.api.$J("POST", '/services/terminate_instances', workerKeys); };
     Implementation.prototype.getInfo = function () { return this.api.$J("GET", '/services/info', {}); };
     Object.defineProperty(Implementation.prototype, "Setup", {
-        get: function () { return new Setup(this.api.subpath('/services/setup')); },
+        get: function () { return new Setup(this.api.mount('/services/setup')); },
         enumerable: true,
         configurable: true
     });
