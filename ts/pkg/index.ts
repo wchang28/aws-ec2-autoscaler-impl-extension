@@ -10,7 +10,7 @@ import { EC2 } from 'aws-sdk'
 let eventStreamPathname = '/services/events/event_stream';
 let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
 
-// server should implement the following pathname
+// server must implement the following pathname
 /*
     /services/events/event_stream
     /services/translate_to_worker_keys
@@ -129,7 +129,8 @@ class Implementation implements IAutoScalerImplementation {
 let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementationProc, connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) => {
     let router = express.Router();
     let setupRouter = express.Router();
-    
+    let wcRouter = express.Router();
+
     router.get('/info', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
         return impl.getInfo();
     }));
@@ -144,6 +145,44 @@ let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementa
     setupRouter.post('/set_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
         return impl.Setup.setCPUsPerInstance(req.body);
     }));
+
+    setupRouter.use('/worker_characteristic', wcRouter);
+
+    wcRouter.get('/', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.toJSON();
+    }));
+    wcRouter.get('/get_key_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.getKeyName();
+    }));
+    wcRouter.post('/set_key_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.setKeyName(req.body);
+    }));
+    wcRouter.get('/get_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.getInstanceType();
+    }));
+    wcRouter.post('/set_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.setInstanceType(req.body);
+    }));
+    wcRouter.get('get_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.getImageId();
+    }));
+    wcRouter.post('/set_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.setImageId(req.body);
+    }));
+    wcRouter.get('/get_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.getSecurityGroupId();
+    }));
+    wcRouter.post('/set_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.setSecurityGroupId(req.body);
+    }));
+    wcRouter.get('/get_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.getSubnetId();
+    }));
+    wcRouter.post('/set_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+        return impl.Setup.WorkerCharacteristic.setSubnetId(req.body);
+    }));
+
+
     let impl = new Implementation(connectOptions, onChange);
     return Promise.resolve<[IAutoScalerImplementation, express.Router]>([impl, router]);
 };

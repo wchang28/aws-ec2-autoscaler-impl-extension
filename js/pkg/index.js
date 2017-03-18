@@ -5,7 +5,7 @@ var $node = require("rest-node");
 var rcf = require("rcf");
 var eventStreamPathname = '/services/events/event_stream';
 var clientOptions = { reconnetIntervalMS: 5000 };
-// server should implement the following pathname
+// server must implement the following pathname
 /*
     /services/events/event_stream
     /services/translate_to_worker_keys
@@ -131,6 +131,7 @@ var Implementation = (function () {
 var factory = function (getImpl, connectOptions, onChange) {
     var router = express.Router();
     var setupRouter = express.Router();
+    var wcRouter = express.Router();
     router.get('/info', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.getInfo();
     }));
@@ -143,6 +144,40 @@ var factory = function (getImpl, connectOptions, onChange) {
     }));
     setupRouter.post('/set_cpus_per_instance', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.Setup.setCPUsPerInstance(req.body);
+    }));
+    setupRouter.use('/worker_characteristic', wcRouter);
+    wcRouter.get('/', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.toJSON();
+    }));
+    wcRouter.get('/get_key_name', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.getKeyName();
+    }));
+    wcRouter.post('/set_key_name', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.setKeyName(req.body);
+    }));
+    wcRouter.get('/get_instance_type', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.getInstanceType();
+    }));
+    wcRouter.post('/set_instance_type', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.setInstanceType(req.body);
+    }));
+    wcRouter.get('get_image_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.getImageId();
+    }));
+    wcRouter.post('/set_image_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.setImageId(req.body);
+    }));
+    wcRouter.get('/get_security_group_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.getSecurityGroupId();
+    }));
+    wcRouter.post('/set_security_group_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.setSecurityGroupId(req.body);
+    }));
+    wcRouter.get('/get_subnet_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.getSubnetId();
+    }));
+    wcRouter.post('/set_subnet_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.setSubnetId(req.body);
     }));
     var impl = new Implementation(connectOptions, onChange);
     return Promise.resolve([impl, router]);
