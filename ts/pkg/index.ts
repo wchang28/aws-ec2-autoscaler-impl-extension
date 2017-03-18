@@ -2,11 +2,12 @@ import {IAutoScalerImplementation, IWorker, WorkerKey, IAutoScalableState, IWork
 import * as express from 'express';
 import * as core from 'express-serve-static-core';
 import {AutoScalerImplementationFactory, AutoScalerImplementationOnChangeHandler, GetAutoScalerImplementationProc, getRequestHandlerForImplementation} from 'grid-autoscaler-impl-pkg';
-import {IWorkerCharacteristic, IImplementationSetup, IWorkerCharacteristicSetup, ImplementationJSON} from "aws-ec2-autoscaler-impl";
+import {IImplementationSetup} from "aws-ec2-autoscaler-impl";
 import * as $node from 'rest-node';
 import * as rcf from 'rcf';
 import { EC2 } from 'aws-sdk';
 import {ApiCore, IMessageClient, GridMessage} from "grid-client-core";
+import {getImplementationSetup} from '../implApi';
 
 let eventStreamPathname = '/services/events/event_stream';
 let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
@@ -35,30 +36,7 @@ let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
     /services/setup/worker_characteristic/set_subnet_id
 */
 
-class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
-    constructor(private api: ApiCore<GridMessage>) {}
-    toJSON(): Promise<IWorkerCharacteristic> {return this.api.$J("GET", '/', {});}
-    getKeyName(): Promise<string> {return this.api.$J("GET", '/get_key_name', {});}
-    setKeyName(value: string): Promise<string> {return this.api.$J("POST", '/set_key_name', value);}
-    getInstanceType(): Promise<EC2.InstanceType> {return this.api.$J("GET", '/get_instance_type', {});}
-    setInstanceType(value: EC2.InstanceType): Promise<EC2.InstanceType> {return this.api.$J("POST", '/set_instance_type', value);}
-    getImageId(): Promise<string> {return this.api.$J("GET", '/get_image_id', {});}
-    setImageId(value: string): Promise<string> {return this.api.$J("POST", '/set_image_id', value);}
-    getSecurityGroupId(): Promise<string> {return this.api.$J("GET", '/get_security_group_id', {});}
-    setSecurityGroupId(value: string): Promise<string> {return this.api.$J("POST", '/set_security_group_id', value);}
-    getSubnetId(): Promise<string> {return this.api.$J("GET", '/get_subnet_id', {});}
-    setSubnetId(value: string): Promise<string> {return this.api.$J("POST", '/set_subnet_id', value);}
-}
-
-class ImplementationSetup implements IImplementationSetup {
-    constructor(private api: ApiCore<GridMessage>) {}
-    toJSON() : Promise<ImplementationJSON> {return this.api.$J("GET", '/', {});}
-    getCPUsPerInstance() : Promise<number> {return this.api.$J("GET", '/get_cpus_per_instance', {});}
-    setCPUsPerInstance(value: number) : Promise<number> {return this.api.$J("POST", '/set_cpus_per_instance', value);}
-    get WorkerCharacteristic(): IWorkerCharacteristicSetup {return new WorkerCharacteristicSetup(this.api.mount('/worker_characteristic'));}
-}
-
-class Implementation implements IAutoScalerImplementation {
+class ImplementationProxy implements IAutoScalerImplementation {
     private api: ApiCore<GridMessage>;
     private msgClient: IMessageClient<GridMessage>;
     constructor(connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) {
@@ -81,10 +59,10 @@ class Implementation implements IAutoScalerImplementation {
     TerminateInstances(workerKeys: WorkerKey[]) : Promise<WorkerInstance[]> {return this.api.$J("POST", '/services/terminate_instances', workerKeys);}
     getInfo() : Promise<AutoScalerImplementationInfo> {return this.api.$J("GET", '/services/info', {});}
 
-    get Setup(): IImplementationSetup { return new ImplementationSetup(this.api.mount('/services/setup'));}
+    get Setup(): IImplementationSetup { return getImplementationSetup(this.api.mount('/services/setup'));}
 }
 
-/*
+/* implementation API extension
     /info
     /setup
     /setup/get_cpus_per_instance
@@ -104,64 +82,63 @@ class Implementation implements IAutoScalerImplementation {
 
 // factory function
 let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementationProc, connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) => {
-    let router = express.Router();
+    let implApiRouter = express.Router();
     let setupRouter = express.Router();
     let wcRouter = express.Router();
 
-    router.get('/info', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    implApiRouter.get('/info', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.getInfo();
     }));
-    router.use('/setup', setupRouter);
+    implApiRouter.use('/setup', setupRouter);
 
-    setupRouter.get('/', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    setupRouter.get('/', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.toJSON();
     }));
-    setupRouter.get('/get_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    setupRouter.get('/get_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.getCPUsPerInstance();
     }));
-    setupRouter.post('/set_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    setupRouter.post('/set_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.setCPUsPerInstance(req.body);
     }));
 
     setupRouter.use('/worker_characteristic', wcRouter);
 
-    wcRouter.get('/', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.get('/', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.toJSON();
     }));
-    wcRouter.get('/get_key_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.get('/get_key_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getKeyName();
     }));
-    wcRouter.post('/set_key_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.post('/set_key_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.setKeyName(req.body);
     }));
-    wcRouter.get('/get_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.get('/get_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getInstanceType();
     }));
-    wcRouter.post('/set_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.post('/set_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.setInstanceType(req.body);
     }));
-    wcRouter.get('get_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.get('get_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getImageId();
     }));
-    wcRouter.post('/set_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.post('/set_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.setImageId(req.body);
     }));
-    wcRouter.get('/get_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.get('/get_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getSecurityGroupId();
     }));
-    wcRouter.post('/set_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.post('/set_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.setSecurityGroupId(req.body);
     }));
-    wcRouter.get('/get_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.get('/get_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getSubnetId();
     }));
-    wcRouter.post('/set_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: Implementation) => {
+    wcRouter.post('/set_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.setSubnetId(req.body);
     }));
 
-
-    let impl = new Implementation(connectOptions, onChange);
-    return Promise.resolve<[IAutoScalerImplementation, express.Router]>([impl, router]);
+    let impl = new ImplementationProxy(connectOptions, onChange);
+    return Promise.resolve<[IAutoScalerImplementation, express.Router]>([impl, implApiRouter]);
 };
 
 export {factory};
