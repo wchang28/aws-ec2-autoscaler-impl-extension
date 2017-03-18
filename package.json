@@ -15,7 +15,7 @@
     "aws-sdk": "^2.6.6",
     "express": "^4.15.2",
     "grid-autoscaler-impl-pkg": "git+https://github.com/wchang28/grid-autoscaler-impl-pkg.git",
-	"grid-client-core": "git+https://github.com/wchang28/grid-client-core.git",
+    "grid-client-core": "git+https://github.com/wchang28/grid-client-core.git",
     "rcf": "git+https://github.com/wchang28/rcf.git",
     "rest-node": "git+https://github.com/wchang28/rest-node.git"
   }

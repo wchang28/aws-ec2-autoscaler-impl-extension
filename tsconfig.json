@@ -10,6 +10,7 @@
   },
   "files": [
     "./ts/pkg/index.ts",
-    "./ts/server/app.ts"
+    "./ts/server/app.ts",
+    "./ts/server/main.tsx"
   ]
 }
