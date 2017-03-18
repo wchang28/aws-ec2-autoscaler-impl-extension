@@ -3,6 +3,7 @@ var express = require("express");
 var grid_autoscaler_impl_pkg_1 = require("grid-autoscaler-impl-pkg");
 var $node = require("rest-node");
 var rcf = require("rcf");
+var grid_client_core_1 = require("grid-client-core");
 var eventStreamPathname = '/services/events/event_stream';
 var clientOptions = { reconnetIntervalMS: 5000 };
 // server must implement the following pathname
@@ -28,29 +29,6 @@ var clientOptions = { reconnetIntervalMS: 5000 };
     /services/setup/worker_characteristic/get_subnet_id
     /services/setup/worker_characteristic/set_subnet_id
 */
-var ApiCore = (function () {
-    function ApiCore($driver, connectOptions) {
-        this.__authApi = new rcf.AuthorizedRestApi($driver, rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
-    }
-    ApiCore.prototype.$J = function (method, pathname, data) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.__authApi.$JP(method, pathname, data)
-                .then(function (result) {
-                resolve(result.ret);
-            }).catch(function (err) {
-                reject(err);
-            });
-        });
-    };
-    ApiCore.prototype.$M = function () { return this.__authApi.$M(eventStreamPathname, clientOptions); };
-    ApiCore.prototype.mount = function (pathname) {
-        var access = (this.__authApi.access ? JSON.parse(JSON.stringify(this.__authApi.access)) : {});
-        access.instance_url = this.__authApi.instance_url + pathname;
-        return new ApiCore(this.__authApi.$driver, access);
-    };
-    return ApiCore;
-}());
 var WorkerCharacteristicSetup = (function () {
     function WorkerCharacteristicSetup(api) {
         this.api = api;
@@ -68,24 +46,24 @@ var WorkerCharacteristicSetup = (function () {
     WorkerCharacteristicSetup.prototype.setSubnetId = function (value) { return this.api.$J("POST", '/set_subnet_id', value); };
     return WorkerCharacteristicSetup;
 }());
-var Setup = (function () {
-    function Setup(api) {
+var ImplementationSetup = (function () {
+    function ImplementationSetup(api) {
         this.api = api;
     }
-    Setup.prototype.toJSON = function () { return this.api.$J("GET", '/', {}); };
-    Setup.prototype.getCPUsPerInstance = function () { return this.api.$J("GET", '/get_cpus_per_instance', {}); };
-    Setup.prototype.setCPUsPerInstance = function (value) { return this.api.$J("POST", '/set_cpus_per_instance', value); };
-    Object.defineProperty(Setup.prototype, "WorkerCharacteristic", {
+    ImplementationSetup.prototype.toJSON = function () { return this.api.$J("GET", '/', {}); };
+    ImplementationSetup.prototype.getCPUsPerInstance = function () { return this.api.$J("GET", '/get_cpus_per_instance', {}); };
+    ImplementationSetup.prototype.setCPUsPerInstance = function (value) { return this.api.$J("POST", '/set_cpus_per_instance', value); };
+    Object.defineProperty(ImplementationSetup.prototype, "WorkerCharacteristic", {
         get: function () { return new WorkerCharacteristicSetup(this.api.mount('/worker_characteristic')); },
         enumerable: true,
         configurable: true
     });
-    return Setup;
+    return ImplementationSetup;
 }());
 var Implementation = (function () {
     function Implementation(connectOptions, onChange) {
         var _this = this;
-        this.api = new ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
+        this.api = new grid_client_core_1.ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', function (conn_id) {
             var sub_id = _this.msgClient.subscribe('/topic/implementation/setup', function (msg) {
@@ -103,7 +81,7 @@ var Implementation = (function () {
     Implementation.prototype.TerminateInstances = function (workerKeys) { return this.api.$J("POST", '/services/terminate_instances', workerKeys); };
     Implementation.prototype.getInfo = function () { return this.api.$J("GET", '/services/info', {}); };
     Object.defineProperty(Implementation.prototype, "Setup", {
-        get: function () { return new Setup(this.api.mount('/services/setup')); },
+        get: function () { return new ImplementationSetup(this.api.mount('/services/setup')); },
         enumerable: true,
         configurable: true
     });

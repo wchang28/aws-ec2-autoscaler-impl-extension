@@ -5,7 +5,8 @@ import {AutoScalerImplementationFactory, AutoScalerImplementationOnChangeHandler
 import {IWorkerCharacteristic, IImplementationSetup, IWorkerCharacteristicSetup, ImplementationJSON} from "aws-ec2-autoscaler-impl";
 import * as $node from 'rest-node';
 import * as rcf from 'rcf';
-import { EC2 } from 'aws-sdk'
+import { EC2 } from 'aws-sdk';
+import {ApiCore, IMessageClient, GridMessage} from "grid-client-core";
 
 let eventStreamPathname = '/services/events/event_stream';
 let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
@@ -34,31 +35,8 @@ let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
     /services/setup/worker_characteristic/set_subnet_id
 */
 
-class ApiCore {
-    private __authApi: rcf.AuthorizedRestApi;
-    constructor($driver: rcf.$Driver, connectOptions: rcf.ApiInstanceConnectOptions) {
-        this.__authApi = new rcf.AuthorizedRestApi($driver, rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
-    }
-    $J(method: string, pathname: string, data: any) : Promise<any> {
-        return new Promise<any>((resolve: (value: any) => void, reject: (err: any) => void) => {
-            this.__authApi.$JP(method, pathname, data)
-            .then((result: rcf.RestReturn) => {
-                resolve(result.ret);
-            }).catch((err: any) => {
-                reject(err);
-            });
-        });
-    }
-    $M() : rcf.IMessageClient {return this.__authApi.$M(eventStreamPathname, clientOptions);}
-    mount(pathname: string): ApiCore {
-        let access:rcf.OAuth2Access = (this.__authApi.access ? JSON.parse(JSON.stringify(this.__authApi.access)) : {});
-        access.instance_url = this.__authApi.instance_url + pathname;
-        return new ApiCore(this.__authApi.$driver, access);
-    }
-}
-
 class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
-    constructor(private api: ApiCore) {}
+    constructor(private api: ApiCore<GridMessage>) {}
     toJSON(): Promise<IWorkerCharacteristic> {return this.api.$J("GET", '/', {});}
     getKeyName(): Promise<string> {return this.api.$J("GET", '/get_key_name', {});}
     setKeyName(value: string): Promise<string> {return this.api.$J("POST", '/set_key_name', value);}
@@ -72,8 +50,8 @@ class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
     setSubnetId(value: string): Promise<string> {return this.api.$J("POST", '/set_subnet_id', value);}
 }
 
-class Setup implements IImplementationSetup {
-    constructor(private api: ApiCore) {}
+class ImplementationSetup implements IImplementationSetup {
+    constructor(private api: ApiCore<GridMessage>) {}
     toJSON() : Promise<ImplementationJSON> {return this.api.$J("GET", '/', {});}
     getCPUsPerInstance() : Promise<number> {return this.api.$J("GET", '/get_cpus_per_instance', {});}
     setCPUsPerInstance(value: number) : Promise<number> {return this.api.$J("POST", '/set_cpus_per_instance', value);}
@@ -81,14 +59,14 @@ class Setup implements IImplementationSetup {
 }
 
 class Implementation implements IAutoScalerImplementation {
-    private api: ApiCore;
-    private msgClient: rcf.IMessageClient;
+    private api: ApiCore<GridMessage>;
+    private msgClient: IMessageClient<GridMessage>;
     constructor(connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) {
-        this.api = new ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions));
+        this.api = new ApiCore<GridMessage>($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', (conn_id:string) => {
             let sub_id = this.msgClient.subscribe('/topic/implementation/setup'
-            ,(msg: rcf.IMessage) => {
+            ,(msg: GridMessage) => {
                 onChange();
             }, (err: any) => {
                 console.error('!!! Error: ' + JSON.stringify(err));
@@ -103,7 +81,7 @@ class Implementation implements IAutoScalerImplementation {
     TerminateInstances(workerKeys: WorkerKey[]) : Promise<WorkerInstance[]> {return this.api.$J("POST", '/services/terminate_instances', workerKeys);}
     getInfo() : Promise<AutoScalerImplementationInfo> {return this.api.$J("GET", '/services/info', {});}
 
-    get Setup(): IImplementationSetup { return new Setup(this.api.mount('/services/setup'));}
+    get Setup(): IImplementationSetup { return new ImplementationSetup(this.api.mount('/services/setup'));}
 }
 
 /*
