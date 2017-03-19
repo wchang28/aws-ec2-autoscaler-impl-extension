@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as core from 'express-serve-static-core';
 import {getReqestHandler} from '../../requestData';
 import {Implementation as EC2Implementation} from "aws-ec2-autoscaler-impl";
+import {Router as wcRouter} from './worker_characteristic';
 
 let router = express.Router();
 export {router as Router};
@@ -20,3 +21,4 @@ router.post('/set_cpus_per_instance', getReqestHandler((impl: EC2Implementation,
     impl.CPUsPerInstance = req.body;
     return Promise.resolve<any>({});
 }));
+router.use('/worker_characteristic', wcRouter);

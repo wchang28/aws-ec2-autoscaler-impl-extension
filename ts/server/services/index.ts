@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as core from 'express-serve-static-core';
 import {getReqestHandler} from '../requestData';
 import {Implementation as EC2Implementation} from "aws-ec2-autoscaler-impl";
+import {Router as setupRouter} from './setup';
 
 let router = express.Router();
 
@@ -21,5 +22,6 @@ router.post('/estimate_workers_launch_request', getReqestHandler((impl: EC2Imple
 router.post('/launch_instances', getReqestHandler((impl: EC2Implementation, req: express.Request) => impl.LaunchInstances(req.body)));
 router.post('/terminate_instances', getReqestHandler((impl: EC2Implementation, req: express.Request) => impl.TerminateInstances(req.body)));
 router.get('/info', getReqestHandler((impl: EC2Implementation, req: express.Request) => impl.getInfo()));
+router.use('/setup', setupRouter);
 
 export {router as Router};

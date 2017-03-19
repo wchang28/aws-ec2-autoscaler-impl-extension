@@ -2,6 +2,7 @@
 // route /services
 var express = require("express");
 var requestData_1 = require("../requestData");
+var setup_1 = require("./setup");
 var router = express.Router();
 exports.Router = router;
 /*
@@ -18,3 +19,4 @@ router.post('/estimate_workers_launch_request', requestData_1.getReqestHandler(f
 router.post('/launch_instances', requestData_1.getReqestHandler(function (impl, req) { return impl.LaunchInstances(req.body); }));
 router.post('/terminate_instances', requestData_1.getReqestHandler(function (impl, req) { return impl.TerminateInstances(req.body); }));
 router.get('/info', requestData_1.getReqestHandler(function (impl, req) { return impl.getInfo(); }));
+router.use('/setup', setup_1.Router);
