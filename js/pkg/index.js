@@ -45,8 +45,8 @@ var ImplementationProxy = (function () {
             console.error('!!! Error: ' + JSON.stringify(err));
         });
     }
-    ImplementationProxy.prototype.TranslateToWorkerKeys = function (workers) { return this.api.$J("GET", '/services/translate_to_worker_keys', {}); };
-    ImplementationProxy.prototype.EstimateWorkersLaunchRequest = function (state) { return this.api.$J("GET", '/services/estimate_workers_launch_request', {}); };
+    ImplementationProxy.prototype.TranslateToWorkerKeys = function (workers) { return this.api.$J("POST", '/services/translate_to_worker_keys', workers); };
+    ImplementationProxy.prototype.EstimateWorkersLaunchRequest = function (state) { return this.api.$J("POST", '/services/estimate_workers_launch_request', state); };
     ImplementationProxy.prototype.LaunchInstances = function (launchRequest) { return this.api.$J("POST", '/services/launch_instances', launchRequest); };
     ImplementationProxy.prototype.TerminateInstances = function (workerKeys) { return this.api.$J("POST", '/services/terminate_instances', workerKeys); };
     ImplementationProxy.prototype.getInfo = function () { return this.api.$J("GET", '/services/info', {}); };

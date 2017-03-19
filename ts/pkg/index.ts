@@ -53,8 +53,8 @@ class ImplementationProxy implements IAutoScalerImplementation {
             console.error('!!! Error: ' + JSON.stringify(err));
         });
     }
-    TranslateToWorkerKeys(workers: IWorker[]) : Promise<WorkerKey[]> {return this.api.$J("GET", '/services/translate_to_worker_keys', {});}
-    EstimateWorkersLaunchRequest(state: IAutoScalableState) : Promise<IWorkersLaunchRequest> {return this.api.$J("GET", '/services/estimate_workers_launch_request', {});}
+    TranslateToWorkerKeys(workers: IWorker[]) : Promise<WorkerKey[]> {return this.api.$J("POST", '/services/translate_to_worker_keys', workers);}
+    EstimateWorkersLaunchRequest(state: IAutoScalableState) : Promise<IWorkersLaunchRequest> {return this.api.$J("POST", '/services/estimate_workers_launch_request', state);}
     LaunchInstances(launchRequest: IWorkersLaunchRequest) : Promise<WorkerInstance[]> {return this.api.$J("POST", '/services/launch_instances', launchRequest);}
     TerminateInstances(workerKeys: WorkerKey[]) : Promise<WorkerInstance[]> {return this.api.$J("POST", '/services/terminate_instances', workerKeys);}
     getInfo() : Promise<AutoScalerImplementationInfo> {return this.api.$J("GET", '/services/info', {});}
