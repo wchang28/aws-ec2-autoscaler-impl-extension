@@ -10,6 +10,7 @@ var fs = require("fs");
 var settingsStore_1 = require("./settingsStore");
 var services_1 = require("./services");
 var utils_1 = require("../utils");
+var oauth2_1 = require("oauth2");
 if (process.argv.length < 3) {
     console.error("config file is missiing");
     process.exit(1);
@@ -30,6 +31,30 @@ store.load()
     app.use(bodyParser.json({ "limit": "999mb" }));
     app.use(prettyPrinter.get());
     app.set('jsonp callback name', 'cb');
+    app.use('/', function (req, res, next) {
+        if (!config.allowedAccessTokens || config.allowedAccessTokens.length === 0)
+            next();
+        else {
+            var not_authorized_err = { error: "not-authorized" };
+            var authHeader = req.headers["authorization"];
+            if (!authHeader)
+                res.status(400).json(not_authorized_err);
+            else {
+                var tokenMatched = false;
+                for (var i in config.allowedAccessTokens) {
+                    var accessToken = config.allowedAccessTokens[i];
+                    if (oauth2_1.Utils.getAuthorizationHeaderFormAccessToken(accessToken) === authHeader) {
+                        tokenMatched = true;
+                        break;
+                    }
+                }
+                if (tokenMatched)
+                    next();
+                else
+                    res.status(400).json(not_authorized_err);
+            }
+        }
+    });
     var implementation = new aws_ec2_autoscaler_impl_1.Implementation(config.implementationInfo, function (worker) { return worker.RemoteAddress; }, function (instance) { return (instance ? instance.PrivateIpAddress : null); }, function (instance, workerKey) { return (instance ? instance.PrivateIpAddress === workerKey : false); }, options);
     implementation.on('change', function () {
         var msg = { type: "change", content: null };

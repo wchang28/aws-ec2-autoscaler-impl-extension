@@ -24,6 +24,7 @@
     "grid-client-browser": "https://github.com/wchang28/grid-client-browser.git",
     "grid-client-core": "git+https://github.com/wchang28/grid-client-core.git",
     "no-cache-express": "git+https://github.com/wchang28/no-cache-express.git",
+    "oauth2": "git+https://github.com/wchang28/oauth2.git",
     "rcf": "git+https://github.com/wchang28/rcf.git",
     "rcf-message-router": "git+https://github.com/wchang28/rcf-message-router.git",
     "react": "^15.2.0",

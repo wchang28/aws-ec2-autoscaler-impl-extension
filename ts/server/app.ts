@@ -15,6 +15,7 @@ import {IGlobal} from "./global";
 import {Router as servicesRouter, ConnectionsManager as connectionsManager} from './services';
 import {GridMessage} from 'grid-client-core';
 import {Utils} from '../utils';
+import {Utils as OAuth2Utils} from "oauth2";
 
 if (process.argv.length < 3) {
     console.error("config file is missiing");
@@ -41,6 +42,31 @@ store.load()
     app.use(bodyParser.json({"limit":"999mb"}));
     app.use(prettyPrinter.get());
     app.set('jsonp callback name', 'cb');
+
+    app.use('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        if (!config.allowedAccessTokens || config.allowedAccessTokens.length === 0)
+            next();
+        else {
+            let not_authorized_err = {error: "not-authorized"};
+            let authHeader: string = req.headers["authorization"];
+            if (!authHeader)
+                res.status(400).json(not_authorized_err);
+            else {
+                let tokenMatched = false;
+                for (let i in config.allowedAccessTokens) {
+                    let accessToken = config.allowedAccessTokens[i];
+                    if (OAuth2Utils.getAuthorizationHeaderFormAccessToken(accessToken) === authHeader) {
+                        tokenMatched = true;
+                        break;
+                    }
+                }
+                if (tokenMatched)
+                    next();
+                else
+                    res.status(400).json(not_authorized_err);
+            }
+        }
+    });
 
     let implementation = new EC2Implementation(
         config.implementationInfo

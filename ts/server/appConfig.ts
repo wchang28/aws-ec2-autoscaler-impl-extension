@@ -10,7 +10,7 @@ export interface ASWConfig {
 export interface IAppConfig {
     webServerConfig: IWebServerConfig;
     awsConfig: ASWConfig;
-    allowedAccessTokens: AccessToken[];
+    allowedAccessTokens?: AccessToken[];
     implementationInfo: AutoScalerImplementationInfo;
     settingsFile: string;
 }
