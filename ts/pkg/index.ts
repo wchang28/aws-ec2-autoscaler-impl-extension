@@ -44,7 +44,7 @@ class ImplementationProxy implements IAutoScalerImplementation {
         this.api = new ApiCore<GridMessage>($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', (conn_id:string) => {
-            console.log("connected to the topic server :-) conn_id=" + conn_id);
+            console.log("connected to the aws ec2 auto-scaler impl. server :-) conn_id=" + conn_id);
             this.msgClient.subscribe(Utils.getImplementationSetupTopic()
             ,(msg: GridMessage) => {
                 onChange();
