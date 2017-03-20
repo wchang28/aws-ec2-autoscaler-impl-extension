@@ -40,8 +40,8 @@ let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
 class ImplementationProxy implements IAutoScalerImplementation {
     private api: ApiCore<GridMessage>;
     private msgClient: IMessageClient<GridMessage>;
-    constructor(connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) {
-        this.api = new ApiCore<GridMessage>($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
+    constructor(access: rcf.OAuth2Access, onChange: AutoScalerImplementationOnChangeHandler) {
+        this.api = new ApiCore<GridMessage>($node.get(), access, null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', (conn_id:string) => {
             console.log("connected to the aws ec2 auto-scaler impl. server :-) conn_id=" + conn_id);
@@ -86,7 +86,7 @@ class ImplementationProxy implements IAutoScalerImplementation {
 */
 
 // factory function
-let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementationProc, connectOptions: rcf.ApiInstanceConnectOptions, onChange: AutoScalerImplementationOnChangeHandler) => {
+let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementationProc, access: rcf.OAuth2Access, onChange: AutoScalerImplementationOnChangeHandler) => {
     let implApiRouter = express.Router();
     let setupRouter = express.Router();
     let wcRouter = express.Router();
@@ -142,7 +142,7 @@ let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementa
         return impl.Setup.WorkerCharacteristic.setSubnetId(req.body);
     }));
 
-    let impl = new ImplementationProxy(connectOptions, onChange);
+    let impl = new ImplementationProxy(access, onChange);
     return Promise.resolve<[IAutoScalerImplementation, express.Router]>([impl, implApiRouter]);
 };
 

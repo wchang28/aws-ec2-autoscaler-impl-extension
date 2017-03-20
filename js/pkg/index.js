@@ -2,7 +2,6 @@
 var express = require("express");
 var grid_autoscaler_impl_pkg_1 = require("grid-autoscaler-impl-pkg");
 var $node = require("rest-node");
-var rcf = require("rcf");
 var grid_client_core_1 = require("grid-client-core");
 var implApi_1 = require("../implApi");
 var utils_1 = require("../utils");
@@ -32,9 +31,9 @@ var clientOptions = { reconnetIntervalMS: 5000 };
     /services/setup/worker_characteristic/set_subnet_id
 */
 var ImplementationProxy = (function () {
-    function ImplementationProxy(connectOptions, onChange) {
+    function ImplementationProxy(access, onChange) {
         var _this = this;
-        this.api = new grid_client_core_1.ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
+        this.api = new grid_client_core_1.ApiCore($node.get(), access, null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', function (conn_id) {
             console.log("connected to the aws ec2 auto-scaler impl. server :-) conn_id=" + conn_id);
@@ -80,7 +79,7 @@ var ImplementationProxy = (function () {
     /setup/worker_characteristic/set_subnet_id
 */
 // factory function
-var factory = function (getImpl, connectOptions, onChange) {
+var factory = function (getImpl, access, onChange) {
     var implApiRouter = express.Router();
     var setupRouter = express.Router();
     var wcRouter = express.Router();
@@ -131,7 +130,7 @@ var factory = function (getImpl, connectOptions, onChange) {
     wcRouter.post('/set_subnet_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.Setup.WorkerCharacteristic.setSubnetId(req.body);
     }));
-    var impl = new ImplementationProxy(connectOptions, onChange);
+    var impl = new ImplementationProxy(access, onChange);
     return Promise.resolve([impl, implApiRouter]);
 };
 exports.factory = factory;
