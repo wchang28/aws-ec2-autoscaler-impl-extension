@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {GridClient, GridMessage, ApiCore, IMessageClient} from 'grid-client-browser';
