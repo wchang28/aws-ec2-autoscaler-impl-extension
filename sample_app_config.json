@@ -12,6 +12,13 @@
         "credentialProfile": "default"
         ,"region": "us-east-1"
     }
+    ,"allowedAccessTokens":
+    [
+        {
+            "token_type": "Basic"
+            ,"access_token": ""
+        }
+    ]
     ,"implementationInfo":
     {
         "Name": "AWS EC2 Auto-Scaler Implementation"
