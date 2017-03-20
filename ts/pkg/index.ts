@@ -44,12 +44,16 @@ class ImplementationProxy implements IAutoScalerImplementation {
         this.api = new ApiCore<GridMessage>($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', (conn_id:string) => {
-            let sub_id = this.msgClient.subscribe(Utils.getImplementationSetupTopic()
+            console.log("connected to the topic server :-) conn_id=" + conn_id);
+            this.msgClient.subscribe(Utils.getImplementationSetupTopic()
             ,(msg: GridMessage) => {
                 onChange();
-            }, (err: any) => {
-                console.error('!!! Error: ' + JSON.stringify(err));
-            })
+            }, {})
+            .then((sub_id: string) => {
+                console.log("subscription to topic '" + Utils.getImplementationSetupTopic() + "' is successful :-) sub_id=" + sub_id);
+            }).catch((err: any) => {
+                console.error("'!!! Error subscribing to topic '" + Utils.getImplementationSetupTopic() + ": " + JSON.stringify(err));
+            });
         }).on('error', (err:any) => {
             console.error('!!! Error: ' + JSON.stringify(err));
         });

@@ -37,10 +37,14 @@ var ImplementationProxy = (function () {
         this.api = new grid_client_core_1.ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', function (conn_id) {
-            var sub_id = _this.msgClient.subscribe(utils_1.Utils.getImplementationSetupTopic(), function (msg) {
+            console.log("connected to the topic server :-) conn_id=" + conn_id);
+            _this.msgClient.subscribe(utils_1.Utils.getImplementationSetupTopic(), function (msg) {
                 onChange();
-            }, function (err) {
-                console.error('!!! Error: ' + JSON.stringify(err));
+            }, {})
+                .then(function (sub_id) {
+                console.log("subscription to topic '" + utils_1.Utils.getImplementationSetupTopic() + "' is successful :-) sub_id=" + sub_id);
+            }).catch(function (err) {
+                console.error("'!!! Error subscribing to topic '" + utils_1.Utils.getImplementationSetupTopic() + ": " + JSON.stringify(err));
             });
         }).on('error', function (err) {
             console.error('!!! Error: ' + JSON.stringify(err));
