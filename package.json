@@ -25,6 +25,7 @@
     "grid-client-core": "git+https://github.com/wchang28/grid-client-core.git",
     "no-cache-express": "git+https://github.com/wchang28/no-cache-express.git",
     "rcf": "git+https://github.com/wchang28/rcf.git",
+    "rcf-message-router": "git+https://github.com/wchang28/rcf-message-router.git",
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
     "rest-node": "git+https://github.com/wchang28/rest-node.git"

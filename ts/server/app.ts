@@ -11,7 +11,7 @@ import {IAppConfig} from './appConfig';
 import {SettingsStore} from "./settingsStore";
 import {IWorker, WorkerKey} from 'autoscalable-grid';
 import {IGlobal} from "./global";
-import {Router as servicesRouter} from './services';
+import {Router as servicesRouter, ConnectionsManager as connectionsManager} from './services';
 
 if (process.argv.length < 3) {
     console.error("config file is missiing");
