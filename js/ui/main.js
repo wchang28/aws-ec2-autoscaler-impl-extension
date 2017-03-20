@@ -45,6 +45,7 @@ var ImplApp = (function (_super) {
                 });
             }, {})
                 .then(function (sub_id) {
+                console.log("topic subscription is successful. sub_id=" + sub_id);
                 _this.setState({ sub_id: sub_id });
             }).catch(function (err) {
                 console.error('!!! subscription error:' + JSON.stringify(err));

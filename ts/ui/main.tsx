@@ -48,6 +48,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                 });
             }, {})
             .then((sub_id: string) => {
+                console.log("topic subscription is successful. sub_id=" + sub_id);
                 this.setState({sub_id});
             }).catch((err: any) => {
                 console.error('!!! subscription error:' + JSON.stringify(err));
