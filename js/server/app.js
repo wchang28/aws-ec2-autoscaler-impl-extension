@@ -18,6 +18,9 @@ var config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 var store = new settingsStore_1.SettingsStore(config.settingsFile);
 store.load()
     .then(function (options) {
+    console.log("settings loaded successfully. settings=");
+    console.log(JSON.stringify(options, null, 2));
+    console.log("");
     var app = express();
     app.use(noCache);
     app.use(bodyParser.json({ "limit": "999mb" }));
@@ -36,7 +39,7 @@ store.load()
     app.set("global", g);
     app.use('/services', services_1.Router);
     express_web_server_1.startServer(config.webServerConfig, app, function (secure, host, port) {
-        console.log('app server listening at %s://%s:%s', (secure ? 'https' : 'http'), host, port);
+        console.log('aws ec2 auto-scaler impl. service listening at %s://%s:%s', (secure ? 'https' : 'http'), host, port);
     });
 }).catch(function (err) {
     console.error("!! Error loading settings: " + JSON.stringify(err));

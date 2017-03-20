@@ -26,6 +26,10 @@ let store = new SettingsStore(config.settingsFile);
 
 store.load()
 .then((options: ImplementationJSON) => {
+    console.log("settings loaded successfully. settings=");
+    console.log(JSON.stringify(options, null, 2));
+    console.log("");
+
     let app = express();
 
     app.use(noCache);
@@ -56,7 +60,7 @@ store.load()
     app.use('/services', servicesRouter);
 
     startServer(config.webServerConfig, app, (secure:boolean, host:string, port:number) => {
-        console.log('app server listening at %s://%s:%s', (secure ? 'https' : 'http'), host, port);
+        console.log('aws ec2 auto-scaler impl. service listening at %s://%s:%s', (secure ? 'https' : 'http'), host, port);
     });
 }).catch((err: any) => {
     console.error("!! Error loading settings: " + JSON.stringify(err));
