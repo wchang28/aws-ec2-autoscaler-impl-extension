@@ -43,6 +43,7 @@ store.load()
     app.use(prettyPrinter.get());
     app.set('jsonp callback name', 'cb');
 
+    // add access authorization middleware to the root
     app.use('/', (req: express.Request, res: express.Response, next: express.NextFunction) => {
         if (!config.allowedAccessTokens || config.allowedAccessTokens.length === 0)
             next();

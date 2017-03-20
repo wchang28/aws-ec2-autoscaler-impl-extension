@@ -31,6 +31,7 @@ store.load()
     app.use(bodyParser.json({ "limit": "999mb" }));
     app.use(prettyPrinter.get());
     app.set('jsonp callback name', 'cb');
+    // add access authorization middleware to the root
     app.use('/', function (req, res, next) {
         if (!config.allowedAccessTokens || config.allowedAccessTokens.length === 0)
             next();
