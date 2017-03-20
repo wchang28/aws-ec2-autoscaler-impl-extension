@@ -4,6 +4,7 @@ import * as bodyParser from 'body-parser';
 import noCache = require('no-cache-express');
 import * as prettyPrinter from 'express-pretty-print';
 import {Implementation as EC2Implementation, Options as EC2Options, ImplementationJSON} from "aws-ec2-autoscaler-impl";
+import * as AWS from 'aws-sdk';
 import { EC2 } from 'aws-sdk';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -21,6 +22,10 @@ if (process.argv.length < 3) {
 }
 let configFile = process.argv[2];
 let config: IAppConfig = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+
+// initialize AWS
+AWS.config.credentials = new AWS.SharedIniFileCredentials({profile: config.awsConfig.credentialProfile});
+AWS.config.update({region: config.awsConfig.region});
 
 let store = new SettingsStore(config.settingsFile);
 

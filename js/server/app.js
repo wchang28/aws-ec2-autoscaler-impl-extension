@@ -5,6 +5,7 @@ var bodyParser = require("body-parser");
 var noCache = require("no-cache-express");
 var prettyPrinter = require("express-pretty-print");
 var aws_ec2_autoscaler_impl_1 = require("aws-ec2-autoscaler-impl");
+var AWS = require("aws-sdk");
 var fs = require("fs");
 var settingsStore_1 = require("./settingsStore");
 var services_1 = require("./services");
@@ -15,6 +16,9 @@ if (process.argv.length < 3) {
 }
 var configFile = process.argv[2];
 var config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+// initialize AWS
+AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile: config.awsConfig.credentialProfile });
+AWS.config.update({ region: config.awsConfig.region });
 var store = new settingsStore_1.SettingsStore(config.settingsFile);
 store.load()
     .then(function (options) {
