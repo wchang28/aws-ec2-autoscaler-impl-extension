@@ -1,0 +1,21 @@
+{
+    "webServerConfig":
+    {
+        "http":
+        {
+            "host": "0.0.0.0"
+            ,"port": 8080
+        }
+    }
+    ,"awsConfig":
+    {
+        "credentialProfile": "default"
+        ,"region": "us-east-1"
+    }
+    ,"implementationInfo":
+    {
+        "Name": "AWS EC2 Auto-Scaler Implementation"
+        ,"HasSetupUI": true        
+    }
+    ,"settingsFile": "C:/run/configs/aws-ec2-autoscaler-impl-settings.json"
+}
