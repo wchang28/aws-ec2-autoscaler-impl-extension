@@ -8,6 +8,7 @@ import * as rcf from 'rcf';
 import { EC2 } from 'aws-sdk';
 import {ApiCore, IMessageClient, GridMessage} from "grid-client-core";
 import {getImplementationSetup} from '../implApi';
+import {Utils} from '../utils';
 
 let eventStreamPathname = '/services/events/event_stream';
 let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
@@ -43,7 +44,7 @@ class ImplementationProxy implements IAutoScalerImplementation {
         this.api = new ApiCore<GridMessage>($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', (conn_id:string) => {
-            let sub_id = this.msgClient.subscribe('/topic/implementation/setup'
+            let sub_id = this.msgClient.subscribe(Utils.getImplementationSetupTopic()
             ,(msg: GridMessage) => {
                 onChange();
             }, (err: any) => {

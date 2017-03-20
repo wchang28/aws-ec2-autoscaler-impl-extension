@@ -5,6 +5,7 @@ import {getReqestHandler} from '../requestData';
 import {Implementation as EC2Implementation} from "aws-ec2-autoscaler-impl";
 import {Router as setupRouter} from './setup';
 import * as tr from 'rcf-message-router';
+import {Utils} from '../../utils';
 
 let router = express.Router();
 
@@ -17,7 +18,7 @@ destAuthRouter.use(tr.destAuth((req: tr.DestAuthRequest, res: tr.DestAuthRespons
         next();
 }));
 
-destAuthRouter.get('/topic/implementation/setup', tr.destAuth((req: tr.DestAuthRequest, res: tr.DestAuthResponse) => {
+destAuthRouter.get(Utils.getImplementationSetupTopic(), tr.destAuth((req: tr.DestAuthRequest, res: tr.DestAuthResponse) => {
     res.accept();
 }));
 

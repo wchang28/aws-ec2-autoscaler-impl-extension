@@ -12,6 +12,8 @@ import {SettingsStore} from "./settingsStore";
 import {IWorker, WorkerKey} from 'autoscalable-grid';
 import {IGlobal} from "./global";
 import {Router as servicesRouter, ConnectionsManager as connectionsManager} from './services';
+import {GridMessage} from 'grid-client-core';
+import {Utils} from '../utils';
 
 if (process.argv.length < 3) {
     console.error("config file is missiing");
@@ -39,7 +41,9 @@ store.load()
         ,options);
 
     implementation.on('change', () => {
-        // TODO: notify change here
+        let msg: GridMessage = {type: "change", content: null};
+        connectionsManager.dispatchMessage(Utils.getImplementationSetupTopic(), {}, msg);
+
         store.save(implementation.toJSON())
         .then(() => {}).catch((err: any) => {
             console.error("!!! Error saving settings: " + JSON.stringify(err));

@@ -5,6 +5,7 @@ var $node = require("rest-node");
 var rcf = require("rcf");
 var grid_client_core_1 = require("grid-client-core");
 var implApi_1 = require("../implApi");
+var utils_1 = require("../utils");
 var eventStreamPathname = '/services/events/event_stream';
 var clientOptions = { reconnetIntervalMS: 5000 };
 // server must implement the following pathname
@@ -36,7 +37,7 @@ var ImplementationProxy = (function () {
         this.api = new grid_client_core_1.ApiCore($node.get(), rcf.AuthorizedRestApi.connectOptionsToAccess(connectOptions), null);
         this.msgClient = this.api.$M();
         this.msgClient.on('connect', function (conn_id) {
-            var sub_id = _this.msgClient.subscribe('/topic/implementation/setup', function (msg) {
+            var sub_id = _this.msgClient.subscribe(utils_1.Utils.getImplementationSetupTopic(), function (msg) {
                 onChange();
             }, function (err) {
                 console.error('!!! Error: ' + JSON.stringify(err));

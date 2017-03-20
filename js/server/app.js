@@ -8,6 +8,7 @@ var aws_ec2_autoscaler_impl_1 = require("aws-ec2-autoscaler-impl");
 var fs = require("fs");
 var settingsStore_1 = require("./settingsStore");
 var services_1 = require("./services");
+var utils_1 = require("../utils");
 if (process.argv.length < 3) {
     console.error("config file is missiing");
     process.exit(1);
@@ -24,7 +25,8 @@ store.load()
     app.set('jsonp callback name', 'cb');
     var implementation = new aws_ec2_autoscaler_impl_1.Implementation(config.implementationInfo, function (worker) { return worker.RemoteAddress; }, function (instance) { return (instance ? instance.PrivateIpAddress : null); }, function (instance, workerKey) { return (instance ? instance.PrivateIpAddress === workerKey : false); }, options);
     implementation.on('change', function () {
-        // TODO: notify change here
+        var msg = { type: "change", content: null };
+        services_1.ConnectionsManager.dispatchMessage(utils_1.Utils.getImplementationSetupTopic(), {}, msg);
         store.save(implementation.toJSON())
             .then(function () { }).catch(function (err) {
             console.error("!!! Error saving settings: " + JSON.stringify(err));
