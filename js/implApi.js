@@ -22,15 +22,15 @@ var WorkerCharacteristicSetup = (function () {
     }
     WorkerCharacteristicSetup.prototype.toJSON = function () { return this.api.$J("GET", '/', {}); };
     WorkerCharacteristicSetup.prototype.getKeyName = function () { return this.api.$J("GET", '/get_key_name', {}); };
-    WorkerCharacteristicSetup.prototype.setKeyName = function (value) { return this.api.$J("POST", '/set_key_name', value); };
+    WorkerCharacteristicSetup.prototype.setKeyName = function (value) { return this.api.$J("POST", '/set_key_name', { value: value }); };
     WorkerCharacteristicSetup.prototype.getInstanceType = function () { return this.api.$J("GET", '/get_instance_type', {}); };
-    WorkerCharacteristicSetup.prototype.setInstanceType = function (value) { return this.api.$J("POST", '/set_instance_type', value); };
+    WorkerCharacteristicSetup.prototype.setInstanceType = function (value) { return this.api.$J("POST", '/set_instance_type', { value: value }); };
     WorkerCharacteristicSetup.prototype.getImageId = function () { return this.api.$J("GET", '/get_image_id', {}); };
-    WorkerCharacteristicSetup.prototype.setImageId = function (value) { return this.api.$J("POST", '/set_image_id', value); };
+    WorkerCharacteristicSetup.prototype.setImageId = function (value) { return this.api.$J("POST", '/set_image_id', { value: value }); };
     WorkerCharacteristicSetup.prototype.getSecurityGroupId = function () { return this.api.$J("GET", '/get_security_group_id', {}); };
-    WorkerCharacteristicSetup.prototype.setSecurityGroupId = function (value) { return this.api.$J("POST", '/set_security_group_id', value); };
+    WorkerCharacteristicSetup.prototype.setSecurityGroupId = function (value) { return this.api.$J("POST", '/set_security_group_id', { value: value }); };
     WorkerCharacteristicSetup.prototype.getSubnetId = function () { return this.api.$J("GET", '/get_subnet_id', {}); };
-    WorkerCharacteristicSetup.prototype.setSubnetId = function (value) { return this.api.$J("POST", '/set_subnet_id', value); };
+    WorkerCharacteristicSetup.prototype.setSubnetId = function (value) { return this.api.$J("POST", '/set_subnet_id', { value: value }); };
     return WorkerCharacteristicSetup;
 }());
 var ImplementationSetup = (function () {
@@ -39,7 +39,7 @@ var ImplementationSetup = (function () {
     }
     ImplementationSetup.prototype.toJSON = function () { return this.api.$J("GET", '/', {}); };
     ImplementationSetup.prototype.getCPUsPerInstance = function () { return this.api.$J("GET", '/get_cpus_per_instance', {}); };
-    ImplementationSetup.prototype.setCPUsPerInstance = function (value) { return this.api.$J("POST", '/set_cpus_per_instance', value); };
+    ImplementationSetup.prototype.setCPUsPerInstance = function (value) { return this.api.$J("POST", '/set_cpus_per_instance', { value: value }); };
     Object.defineProperty(ImplementationSetup.prototype, "WorkerCharacteristic", {
         get: function () { return new WorkerCharacteristicSetup(this.api.mount('/worker_characteristic')); },
         enumerable: true,

@@ -25,22 +25,22 @@ class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
     constructor(private api: ApiCore<GridMessage>) {}
     toJSON(): Promise<IWorkerCharacteristic> {return this.api.$J("GET", '/', {});}
     getKeyName(): Promise<string> {return this.api.$J("GET", '/get_key_name', {});}
-    setKeyName(value: string): Promise<string> {return this.api.$J("POST", '/set_key_name', value);}
+    setKeyName(value: string): Promise<string> {return this.api.$J("POST", '/set_key_name', {value});}
     getInstanceType(): Promise<EC2.InstanceType> {return this.api.$J("GET", '/get_instance_type', {});}
-    setInstanceType(value: EC2.InstanceType): Promise<EC2.InstanceType> {return this.api.$J("POST", '/set_instance_type', value);}
+    setInstanceType(value: EC2.InstanceType): Promise<EC2.InstanceType> {return this.api.$J("POST", '/set_instance_type', {value});}
     getImageId(): Promise<string> {return this.api.$J("GET", '/get_image_id', {});}
-    setImageId(value: string): Promise<string> {return this.api.$J("POST", '/set_image_id', value);}
+    setImageId(value: string): Promise<string> {return this.api.$J("POST", '/set_image_id', {value});}
     getSecurityGroupId(): Promise<string> {return this.api.$J("GET", '/get_security_group_id', {});}
-    setSecurityGroupId(value: string): Promise<string> {return this.api.$J("POST", '/set_security_group_id', value);}
+    setSecurityGroupId(value: string): Promise<string> {return this.api.$J("POST", '/set_security_group_id', {value});}
     getSubnetId(): Promise<string> {return this.api.$J("GET", '/get_subnet_id', {});}
-    setSubnetId(value: string): Promise<string> {return this.api.$J("POST", '/set_subnet_id', value);}
+    setSubnetId(value: string): Promise<string> {return this.api.$J("POST", '/set_subnet_id', {value});}
 }
 
 class ImplementationSetup implements IImplementationSetup {
     constructor(private api: ApiCore<GridMessage>) {}
     toJSON() : Promise<ImplementationJSON> {return this.api.$J("GET", '/', {});}
     getCPUsPerInstance() : Promise<number> {return this.api.$J("GET", '/get_cpus_per_instance', {});}
-    setCPUsPerInstance(value: number) : Promise<number> {return this.api.$J("POST", '/set_cpus_per_instance', value);}
+    setCPUsPerInstance(value: number) : Promise<number> {return this.api.$J("POST", '/set_cpus_per_instance', {value});}
     get WorkerCharacteristic(): IWorkerCharacteristicSetup {return new WorkerCharacteristicSetup(this.api.mount('/worker_characteristic'));}
 }
 

@@ -14,7 +14,7 @@ exports.Router = router;
 router.get('/', requestData_1.getReqestHandler(function (impl, req) { return Promise.resolve(impl.toJSON()); }));
 router.get('/get_cpus_per_instance', requestData_1.getReqestHandler(function (impl, req) { return Promise.resolve(impl.CPUsPerInstance); }));
 router.post('/set_cpus_per_instance', requestData_1.getReqestHandler(function (impl, req) {
-    impl.CPUsPerInstance = req.body;
+    impl.CPUsPerInstance = req.body.value;
     return Promise.resolve({});
 }));
 router.use('/worker_characteristic', worker_characteristic_1.Router);

@@ -18,7 +18,7 @@ export {router as Router};
 router.get('/', getReqestHandler((impl: EC2Implementation, req: express.Request) => Promise.resolve<any>(impl.toJSON())));
 router.get('/get_cpus_per_instance', getReqestHandler((impl: EC2Implementation, req: express.Request) => Promise.resolve<any>(impl.CPUsPerInstance)));
 router.post('/set_cpus_per_instance', getReqestHandler((impl: EC2Implementation, req: express.Request) => {
-    impl.CPUsPerInstance = req.body;
+    impl.CPUsPerInstance = req.body.value;
     return Promise.resolve<any>({});
 }));
 router.use('/worker_characteristic', wcRouter);
