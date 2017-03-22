@@ -65,6 +65,47 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         this.msgClient = null;
     }
     get CanChangeField(): boolean {return (this.Setup? true: false);}
+
+    private getNumericFieldChangeButtonClickHandler(fieldLabel: string, currentValue: number, fieldIsFloat: boolean, setValueProc: (value: number) => Promise<number>) : (e: React.MouseEvent<HTMLButtonElement>) => void {
+        let handler = (e: React.MouseEvent<HTMLButtonElement>) => {
+            let s = prompt("New " + fieldLabel + ":", currentValue.toString());
+            if (s !== null) {
+                s = s.trim();
+                if (s) {
+                    let value = (fieldIsFloat ? parseFloat(s) : parseInt(s));
+                    if (isNaN(value))
+                        alert("input is not a valid number");
+                    else {
+                        let p: Promise<number> = setValueProc(value)
+                        p.then((value: number) => {
+                        }).catch((err: any) => {
+                            console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
+                        });
+                    }
+                }
+            }
+            e.preventDefault();
+        };
+        return handler.bind(this);
+    }
+
+    private getTextFieldChangeButtonClickHandler(fieldLabel: string, currentValue: string, setValueProc: (value: string) => Promise<string>) : (e: React.MouseEvent<HTMLButtonElement>) => void {
+        let handler = (e: React.MouseEvent<HTMLButtonElement>) => {
+            let s = prompt("New " + fieldLabel + ":", currentValue);
+            if (s !== null) {
+                s = s.trim();
+                if (s) {
+                    let p: Promise<string> = setValueProc(s)
+                    p.then((value: string) => {
+                    }).catch((err: any) => {
+                        console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
+                    });
+                }
+            }
+            e.preventDefault();
+        };
+        return handler.bind(this);
+    }
     render() {
         let style = {"width":"33%"};
         return (
@@ -86,7 +127,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                                 <tr>
                                     <td>CPUs Per Instance</td>
                                     <td>{this.Setup ? this.Setup.CPUsPerInstance.toString() : null}</td>
-                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getNumericFieldChangeButtonClickHandler("CPUs Per Instance", (this.Setup ? this.Setup.CPUsPerInstance : null), false, this.Implementation.Setup.setCPUsPerInstance.bind(this.Implementation.Setup))}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>KeyName</td>

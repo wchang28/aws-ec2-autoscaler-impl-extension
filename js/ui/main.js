@@ -71,6 +71,45 @@ var ImplApp = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    ImplApp.prototype.getNumericFieldChangeButtonClickHandler = function (fieldLabel, currentValue, fieldIsFloat, setValueProc) {
+        var handler = function (e) {
+            var s = prompt("New " + fieldLabel + ":", currentValue.toString());
+            if (s !== null) {
+                s = s.trim();
+                if (s) {
+                    var value = (fieldIsFloat ? parseFloat(s) : parseInt(s));
+                    if (isNaN(value))
+                        alert("input is not a valid number");
+                    else {
+                        var p = setValueProc(value);
+                        p.then(function (value) {
+                        }).catch(function (err) {
+                            console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
+                        });
+                    }
+                }
+            }
+            e.preventDefault();
+        };
+        return handler.bind(this);
+    };
+    ImplApp.prototype.getTextFieldChangeButtonClickHandler = function (fieldLabel, currentValue, setValueProc) {
+        var handler = function (e) {
+            var s = prompt("New " + fieldLabel + ":", currentValue);
+            if (s !== null) {
+                s = s.trim();
+                if (s) {
+                    var p = setValueProc(s);
+                    p.then(function (value) {
+                    }).catch(function (err) {
+                        console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
+                    });
+                }
+            }
+            e.preventDefault();
+        };
+        return handler.bind(this);
+    };
     ImplApp.prototype.render = function () {
         var style = { "width": "33%" };
         return (React.createElement("div", { style: style },
@@ -89,7 +128,7 @@ var ImplApp = (function (_super) {
                                 React.createElement("td", null, "CPUs Per Instance"),
                                 React.createElement("td", null, this.Setup ? this.Setup.CPUsPerInstance.toString() : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getNumericFieldChangeButtonClickHandler("CPUs Per Instance", (this.Setup ? this.Setup.CPUsPerInstance : null), false, this.Implementation.Setup.setCPUsPerInstance.bind(this.Implementation.Setup)) }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "KeyName"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null),
