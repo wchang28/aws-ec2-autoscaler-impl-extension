@@ -65,7 +65,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         this.msgClient = null;
     }
     render() {
-        let style = {"width":"33%"};
+        let style = {"width":"25%"};
         return (
             <div style={style}>
                 <div className="w3-card-4 w3-margin">
@@ -85,6 +85,31 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                                 <tr>
                                     <td>CPUs Per Instance</td>
                                     <td>{this.Setup ? this.Setup.CPUsPerInstance.toString() : null}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>KeyName</td>
+                                    <td>{this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Instance Type</td>
+                                    <td>{this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Image Id</td>
+                                    <td>{this.Setup ? this.Setup.WorkerCharacteristic.ImageId : null}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Security Group Id</td>
+                                    <td>{this.Setup ? this.Setup.WorkerCharacteristic.SecurityGroupId : null}</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Subnet Id</td>
+                                    <td>{this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null}</td>
                                     <td></td>
                                 </tr>
                             </tbody>
