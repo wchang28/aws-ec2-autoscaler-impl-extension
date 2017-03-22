@@ -40,7 +40,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
             console.log('connected to the dispatcher: conn_id=' + conn_id);
             this.setState({conn_id});
             this.msgClient.subscribe("/", (msg: GridMessage) => {
-                console.log("Got a change message");
+                //console.log("got a change message");
                 this.Implementation.Setup.toJSON()
                 .then((setup: ImplementationJSON) => {
                     this.setState({setup});
@@ -79,7 +79,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                     else {
                         let p: Promise<number> = setValueProc(value)
                         p.then((value: number) => {
-                            console.log("value="+ JSON.stringify(value));
+                            console.log("value set="+ JSON.stringify(value));
                         }).catch((err: any) => {
                             console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
                         });
@@ -99,6 +99,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                 if (s) {
                     let p: Promise<string> = setValueProc(s)
                     p.then((value: string) => {
+                        console.log("value set="+ JSON.stringify(value));
                     }).catch((err: any) => {
                         console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
                     });
@@ -132,9 +133,9 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                                     <td><button disabled={!this.CanChangeField} onClick={this.getNumericFieldChangeButtonClickHandler("CPUs Per Instance", (this.Setup ? this.Setup.CPUsPerInstance : null), false, this.Implementation.Setup.setCPUsPerInstance.bind(this.Implementation.Setup))}>Change...</button></td>
                                 </tr>
                                 <tr>
-                                    <td>KeyName</td>
+                                    <td>Key Name</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null}</td>
-                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("Key Name", (this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null), this.Implementation.Setup.WorkerCharacteristic.setKeyName.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Instance Type</td>

@@ -42,7 +42,7 @@ var ImplApp = (function (_super) {
             console.log('connected to the dispatcher: conn_id=' + conn_id);
             _this.setState({ conn_id: conn_id });
             _this.msgClient.subscribe("/", function (msg) {
-                console.log("Got a change message");
+                //console.log("got a change message");
                 _this.Implementation.Setup.toJSON()
                     .then(function (setup) {
                     _this.setState({ setup: setup });
@@ -84,7 +84,7 @@ var ImplApp = (function (_super) {
                     else {
                         var p = setValueProc(value);
                         p.then(function (value) {
-                            console.log("value=" + JSON.stringify(value));
+                            console.log("value set=" + JSON.stringify(value));
                         }).catch(function (err) {
                             console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
                         });
@@ -103,6 +103,7 @@ var ImplApp = (function (_super) {
                 if (s) {
                     var p = setValueProc(s);
                     p.then(function (value) {
+                        console.log("value set=" + JSON.stringify(value));
                     }).catch(function (err) {
                         console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
                     });
@@ -132,10 +133,10 @@ var ImplApp = (function (_super) {
                                 React.createElement("td", null,
                                     React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getNumericFieldChangeButtonClickHandler("CPUs Per Instance", (this.Setup ? this.Setup.CPUsPerInstance : null), false, this.Implementation.Setup.setCPUsPerInstance.bind(this.Implementation.Setup)) }, "Change..."))),
                             React.createElement("tr", null,
-                                React.createElement("td", null, "KeyName"),
+                                React.createElement("td", null, "Key Name"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("Key Name", (this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null), this.Implementation.Setup.WorkerCharacteristic.setKeyName.bind(this.Implementation.Setup.WorkerCharacteristic)) }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Instance Type"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null),
