@@ -65,8 +65,34 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         this.msgClient = null;
     }
     render() {
-        let style = {"width":"50%"};
-        return <div className="w3-container" style={style}>{this.state.setup ? JSON.stringify(this.state.setup, null, 2) : "???"}</div>;
+        let style = {"width":"33%"};
+        return (
+            <div className="w3-container" style={style}>
+                <div className="w3-card-4 w3-margin">
+                    <div className="w3-container w3-blue">
+                        <h6>Setup</h6>
+                    </div>
+                    <div className="w3-container w3-white">
+                        <table className="w3-table w3-bordered w3-small w3-centered">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Value</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CPUs Per Instance</td>
+                                    <td>{this.Setup ? this.Setup.CPUsPerInstance.toString() : null}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        );
     }
 }
 

@@ -67,8 +67,23 @@ var ImplApp = (function (_super) {
         this.msgClient = null;
     };
     ImplApp.prototype.render = function () {
-        var style = { "width": "50%" };
-        return React.createElement("div", { className: "w3-container", style: style }, this.state.setup ? JSON.stringify(this.state.setup, null, 2) : "???");
+        var style = { "width": "33%" };
+        return (React.createElement("div", { className: "w3-container", style: style },
+            React.createElement("div", { className: "w3-card-4 w3-margin" },
+                React.createElement("div", { className: "w3-container w3-blue" },
+                    React.createElement("h6", null, "Setup")),
+                React.createElement("div", { className: "w3-container w3-white" },
+                    React.createElement("table", { className: "w3-table w3-bordered w3-small w3-centered" },
+                        React.createElement("thead", null,
+                            React.createElement("tr", null,
+                                React.createElement("th", null, "Item"),
+                                React.createElement("th", null, "Value"),
+                                React.createElement("th", null, "Actions"))),
+                        React.createElement("tbody", null,
+                            React.createElement("tr", null,
+                                React.createElement("td", null, "CPUs Per Instance"),
+                                React.createElement("td", null, this.Setup ? this.Setup.CPUsPerInstance.toString() : null),
+                                React.createElement("td", null))))))));
     };
     return ImplApp;
 }(React.Component));
