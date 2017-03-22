@@ -65,7 +65,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         this.msgClient = null;
     }
     render() {
-        let style = {"width":"25%"};
+        let style = {"width":"33%"};
         return (
             <div style={style}>
                 <div className="w3-card-4 w3-margin">

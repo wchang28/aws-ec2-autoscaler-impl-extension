@@ -67,7 +67,7 @@ var ImplApp = (function (_super) {
         this.msgClient = null;
     };
     ImplApp.prototype.render = function () {
-        var style = { "width": "25%" };
+        var style = { "width": "33%" };
         return (React.createElement("div", { style: style },
             React.createElement("div", { className: "w3-card-4 w3-margin" },
                 React.createElement("div", { className: "w3-container w3-blue" },
