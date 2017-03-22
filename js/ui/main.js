@@ -84,7 +84,7 @@ var ImplApp = (function (_super) {
                     else {
                         var p = setValueProc(value);
                         p.then(function (value) {
-                            console.log("value=" + value.toString());
+                            console.log("value=" + JSON.stringify(value));
                         }).catch(function (err) {
                             console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
                         });
