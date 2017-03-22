@@ -64,6 +64,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         this.msgClient.disconnect();
         this.msgClient = null;
     }
+    get CanChangeField(): boolean {return (this.Setup? true: false);}
     render() {
         let style = {"width":"33%"};
         return (
@@ -85,32 +86,32 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                                 <tr>
                                     <td>CPUs Per Instance</td>
                                     <td>{this.Setup ? this.Setup.CPUsPerInstance.toString() : null}</td>
-                                    <td></td>
+                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>KeyName</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null}</td>
-                                    <td></td>
+                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Instance Type</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null}</td>
-                                    <td></td>
+                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Image Id</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.ImageId : null}</td>
-                                    <td></td>
+                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Security Group Id</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.SecurityGroupId : null}</td>
-                                    <td></td>
+                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Subnet Id</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null}</td>
-                                    <td></td>
+                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
                                 </tr>
                             </tbody>
                         </table>

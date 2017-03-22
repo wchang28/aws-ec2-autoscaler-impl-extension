@@ -66,6 +66,11 @@ var ImplApp = (function (_super) {
         this.msgClient.disconnect();
         this.msgClient = null;
     };
+    Object.defineProperty(ImplApp.prototype, "CanChangeField", {
+        get: function () { return (this.Setup ? true : false); },
+        enumerable: true,
+        configurable: true
+    });
     ImplApp.prototype.render = function () {
         var style = { "width": "33%" };
         return (React.createElement("div", { style: style },
@@ -83,27 +88,33 @@ var ImplApp = (function (_super) {
                             React.createElement("tr", null,
                                 React.createElement("td", null, "CPUs Per Instance"),
                                 React.createElement("td", null, this.Setup ? this.Setup.CPUsPerInstance.toString() : null),
-                                React.createElement("td", null)),
+                                React.createElement("td", null,
+                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "KeyName"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.KeyName : null),
-                                React.createElement("td", null)),
+                                React.createElement("td", null,
+                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Instance Type"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null),
-                                React.createElement("td", null)),
+                                React.createElement("td", null,
+                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Image Id"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.ImageId : null),
-                                React.createElement("td", null)),
+                                React.createElement("td", null,
+                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Security Group Id"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.SecurityGroupId : null),
-                                React.createElement("td", null)),
+                                React.createElement("td", null,
+                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Subnet Id"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null),
-                                React.createElement("td", null))))))));
+                                React.createElement("td", null,
+                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change...")))))))));
     };
     return ImplApp;
 }(React.Component));
