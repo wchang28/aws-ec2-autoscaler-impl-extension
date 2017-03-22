@@ -140,22 +140,22 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                                 <tr>
                                     <td>Instance Type</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null}</td>
-                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("Instance Type", (this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null), this.Implementation.Setup.WorkerCharacteristic.setInstanceType.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Image Id</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.ImageId : null}</td>
-                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("Image Id", (this.Setup ? this.Setup.WorkerCharacteristic.ImageId : null), this.Implementation.Setup.WorkerCharacteristic.setImageId.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Security Group Id</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.SecurityGroupId : null}</td>
-                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("Security Group Id", (this.Setup ? this.Setup.WorkerCharacteristic.SecurityGroupId : null), this.Implementation.Setup.WorkerCharacteristic.setSecurityGroupId.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
                                 </tr>
                                 <tr>
                                     <td>Subnet Id</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null}</td>
-                                    <td><button disabled={!this.CanChangeField}>Change...</button></td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("Subnet Id", (this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null), this.Implementation.Setup.WorkerCharacteristic.setSubnetId.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
                                 </tr>
                             </tbody>
                         </table>

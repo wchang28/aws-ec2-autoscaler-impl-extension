@@ -141,22 +141,22 @@ var ImplApp = (function (_super) {
                                 React.createElement("td", null, "Instance Type"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("Instance Type", (this.Setup ? this.Setup.WorkerCharacteristic.InstanceType : null), this.Implementation.Setup.WorkerCharacteristic.setInstanceType.bind(this.Implementation.Setup.WorkerCharacteristic)) }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Image Id"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.ImageId : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("Image Id", (this.Setup ? this.Setup.WorkerCharacteristic.ImageId : null), this.Implementation.Setup.WorkerCharacteristic.setImageId.bind(this.Implementation.Setup.WorkerCharacteristic)) }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Security Group Id"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.SecurityGroupId : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change..."))),
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("Security Group Id", (this.Setup ? this.Setup.WorkerCharacteristic.SecurityGroupId : null), this.Implementation.Setup.WorkerCharacteristic.setSecurityGroupId.bind(this.Implementation.Setup.WorkerCharacteristic)) }, "Change..."))),
                             React.createElement("tr", null,
                                 React.createElement("td", null, "Subnet Id"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField }, "Change...")))))))));
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("Subnet Id", (this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null), this.Implementation.Setup.WorkerCharacteristic.setSubnetId.bind(this.Implementation.Setup.WorkerCharacteristic)) }, "Change...")))))))));
     };
     return ImplApp;
 }(React.Component));
