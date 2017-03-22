@@ -79,6 +79,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                     else {
                         let p: Promise<number> = setValueProc(value)
                         p.then((value: number) => {
+                            console.log("value="+ value.toString());
                         }).catch((err: any) => {
                             console.error('!!! Unable set field auto-scaler: ' + JSON.stringify(err));
                         });
