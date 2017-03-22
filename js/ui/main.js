@@ -108,10 +108,3 @@ var ImplApp = (function (_super) {
     return ImplApp;
 }(React.Component));
 ReactDOM.render(React.createElement(ImplApp, { implementation: impl, apiCore: implApiCore }), document.getElementById('main'));
-/*
-    KeyName: string;
-    InstanceType: EC2.InstanceType;
-    ImageId: string;
-    SecurityGroupId: string;
-    SubnetId: string;
-*/ 
