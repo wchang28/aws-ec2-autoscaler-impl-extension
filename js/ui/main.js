@@ -42,6 +42,7 @@ var ImplApp = (function (_super) {
             console.log('connected to the dispatcher: conn_id=' + conn_id);
             _this.setState({ conn_id: conn_id });
             _this.msgClient.subscribe("/", function (msg) {
+                console.log("Got a change message");
                 _this.Implementation.Setup.toJSON()
                     .then(function (setup) {
                     _this.setState({ setup: setup });

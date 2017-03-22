@@ -40,6 +40,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
             console.log('connected to the dispatcher: conn_id=' + conn_id);
             this.setState({conn_id});
             this.msgClient.subscribe("/", (msg: GridMessage) => {
+                console.log("Got a change message");
                 this.Implementation.Setup.toJSON()
                 .then((setup: ImplementationJSON) => {
                     this.setState({setup});
