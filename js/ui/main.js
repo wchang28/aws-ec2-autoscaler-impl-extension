@@ -23,6 +23,11 @@ var ImplApp = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ImplApp.prototype, "Setup", {
+        get: function () { return this.state.setup; },
+        enumerable: true,
+        configurable: true
+    });
     ImplApp.prototype.componentDidMount = function () {
         var _this = this;
         console.log('componentDidMount()');
@@ -62,7 +67,8 @@ var ImplApp = (function (_super) {
         this.msgClient = null;
     };
     ImplApp.prototype.render = function () {
-        return React.createElement("div", null, this.state.setup ? JSON.stringify(this.state.setup, null, 2) : "???");
+        var style = { "width": "50%" };
+        return React.createElement("div", { className: "w3-container", style: style }, this.state.setup ? JSON.stringify(this.state.setup, null, 2) : "???");
     };
     return ImplApp;
 }(React.Component));

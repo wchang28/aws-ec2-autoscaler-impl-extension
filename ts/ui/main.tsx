@@ -26,6 +26,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         this.state = {conn_id: null, sub_id: null, setup: null};
     }
     get Implementation(): IImplementation {return this.props.implementation;}
+    get Setup() : ImplementationJSON {return this.state.setup;}
     componentDidMount() {
         console.log('componentDidMount()')
         this.Implementation.Setup.toJSON()
@@ -64,7 +65,8 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         this.msgClient = null;
     }
     render() {
-        return <div>{this.state.setup ? JSON.stringify(this.state.setup, null, 2) : "???"}</div>;
+        let style = {"width":"50%"};
+        return <div className="w3-container" style={style}>{this.state.setup ? JSON.stringify(this.state.setup, null, 2) : "???"}</div>;
     }
 }
 
