@@ -67,7 +67,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
     render() {
         let style = {"width":"33%"};
         return (
-            <div className="w3-container" style={style}>
+            <div style={style}>
                 <div className="w3-card-4 w3-margin">
                     <div className="w3-container w3-blue">
                         <h6>Setup</h6>

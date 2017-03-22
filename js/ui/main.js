@@ -68,7 +68,7 @@ var ImplApp = (function (_super) {
     };
     ImplApp.prototype.render = function () {
         var style = { "width": "33%" };
-        return (React.createElement("div", { className: "w3-container", style: style },
+        return (React.createElement("div", { style: style },
             React.createElement("div", { className: "w3-card-4 w3-margin" },
                 React.createElement("div", { className: "w3-container w3-blue" },
                     React.createElement("h6", null, "Setup")),
