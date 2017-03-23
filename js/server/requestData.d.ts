@@ -1,5 +1,4 @@
 /// <reference types="express" />
-/// <reference types="es6-promise" />
 import * as express from 'express';
 import { IGlobal } from './global';
 import { Implementation as EC2Implementation } from "aws-ec2-autoscaler-impl";

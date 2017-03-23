@@ -1,4 +1,3 @@
-/// <reference types="es6-promise" />
 import { AutoScalerImplementationInfo } from 'autoscalable-grid';
 import { IImplementationSetup } from "aws-ec2-autoscaler-impl";
 import { ApiCore, GridMessage } from "grid-client-core";

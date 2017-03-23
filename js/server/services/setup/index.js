@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // route /services/setup
 var express = require("express");
 var requestData_1 = require("../../requestData");

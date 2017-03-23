@@ -1,4 +1,3 @@
-/// <reference types="es6-promise" />
 import { ImplementationJSON } from "aws-ec2-autoscaler-impl";
 export declare class SettingsStore {
     private settingsFile;

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var grid_autoscaler_impl_pkg_1 = require("grid-autoscaler-impl-pkg");
 var $node = require("rest-node");

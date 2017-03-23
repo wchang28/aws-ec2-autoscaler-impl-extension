@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var express_web_server_1 = require("express-web-server");
 var express = require("express");
 var bodyParser = require("body-parser");
