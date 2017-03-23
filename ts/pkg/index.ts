@@ -103,7 +103,7 @@ let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementa
         return impl.Setup.getCPUsPerInstance();
     }));
     setupRouter.post('/set_cpus_per_instance', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
-        return impl.Setup.setCPUsPerInstance(req.body);
+        return impl.Setup.setCPUsPerInstance(req.body.value);
     }));
 
     setupRouter.use('/worker_characteristic', wcRouter);
@@ -115,31 +115,31 @@ let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementa
         return impl.Setup.WorkerCharacteristic.getKeyName();
     }));
     wcRouter.post('/set_key_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
-        return impl.Setup.WorkerCharacteristic.setKeyName(req.body);
+        return impl.Setup.WorkerCharacteristic.setKeyName(req.body.value);
     }));
     wcRouter.get('/get_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getInstanceType();
     }));
     wcRouter.post('/set_instance_type', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
-        return impl.Setup.WorkerCharacteristic.setInstanceType(req.body);
+        return impl.Setup.WorkerCharacteristic.setInstanceType(req.body.value);
     }));
     wcRouter.get('get_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getImageId();
     }));
     wcRouter.post('/set_image_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
-        return impl.Setup.WorkerCharacteristic.setImageId(req.body);
+        return impl.Setup.WorkerCharacteristic.setImageId(req.body.value);
     }));
     wcRouter.get('/get_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getSecurityGroupId();
     }));
     wcRouter.post('/set_security_group_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
-        return impl.Setup.WorkerCharacteristic.setSecurityGroupId(req.body);
+        return impl.Setup.WorkerCharacteristic.setSecurityGroupId(req.body.value);
     }));
     wcRouter.get('/get_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.getSubnetId();
     }));
     wcRouter.post('/set_subnet_id', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
-        return impl.Setup.WorkerCharacteristic.setSubnetId(req.body);
+        return impl.Setup.WorkerCharacteristic.setSubnetId(req.body.value);
     }));
 
     let impl = new ImplementationProxy(access, onChange);

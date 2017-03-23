@@ -95,7 +95,7 @@ var factory = function (getImpl, access, onChange) {
         return impl.Setup.getCPUsPerInstance();
     }));
     setupRouter.post('/set_cpus_per_instance', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
-        return impl.Setup.setCPUsPerInstance(req.body);
+        return impl.Setup.setCPUsPerInstance(req.body.value);
     }));
     setupRouter.use('/worker_characteristic', wcRouter);
     wcRouter.get('/', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
@@ -105,31 +105,31 @@ var factory = function (getImpl, access, onChange) {
         return impl.Setup.WorkerCharacteristic.getKeyName();
     }));
     wcRouter.post('/set_key_name', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
-        return impl.Setup.WorkerCharacteristic.setKeyName(req.body);
+        return impl.Setup.WorkerCharacteristic.setKeyName(req.body.value);
     }));
     wcRouter.get('/get_instance_type', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.Setup.WorkerCharacteristic.getInstanceType();
     }));
     wcRouter.post('/set_instance_type', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
-        return impl.Setup.WorkerCharacteristic.setInstanceType(req.body);
+        return impl.Setup.WorkerCharacteristic.setInstanceType(req.body.value);
     }));
     wcRouter.get('get_image_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.Setup.WorkerCharacteristic.getImageId();
     }));
     wcRouter.post('/set_image_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
-        return impl.Setup.WorkerCharacteristic.setImageId(req.body);
+        return impl.Setup.WorkerCharacteristic.setImageId(req.body.value);
     }));
     wcRouter.get('/get_security_group_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.Setup.WorkerCharacteristic.getSecurityGroupId();
     }));
     wcRouter.post('/set_security_group_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
-        return impl.Setup.WorkerCharacteristic.setSecurityGroupId(req.body);
+        return impl.Setup.WorkerCharacteristic.setSecurityGroupId(req.body.value);
     }));
     wcRouter.get('/get_subnet_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.Setup.WorkerCharacteristic.getSubnetId();
     }));
     wcRouter.post('/set_subnet_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
-        return impl.Setup.WorkerCharacteristic.setSubnetId(req.body);
+        return impl.Setup.WorkerCharacteristic.setSubnetId(req.body.value);
     }));
     var impl = new ImplementationProxy(access, onChange);
     return Promise.resolve([impl, implApiRouter]);
