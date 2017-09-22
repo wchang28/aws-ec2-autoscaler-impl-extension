@@ -16,7 +16,7 @@ var grid_client_browser_1 = require("grid-client-browser");
 var implApi_1 = require("../implApi");
 var implApiCore = grid_client_browser_1.GridClient.getSession().AutoScalerImplementationApiCore;
 var impl = implApi_1.getImplementation(implApiCore);
-var ImplApp = (function (_super) {
+var ImplApp = /** @class */ (function (_super) {
     __extends(ImplApp, _super);
     function ImplApp(props) {
         var _this = _super.call(this, props) || this;

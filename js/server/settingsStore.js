@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
-var SettingsStore = (function () {
+var SettingsStore = /** @class */ (function () {
     function SettingsStore(settingsFile) {
         this.settingsFile = settingsFile;
     }

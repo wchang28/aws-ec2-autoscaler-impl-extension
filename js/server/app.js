@@ -19,7 +19,8 @@ if (process.argv.length < 3) {
 var configFile = process.argv[2];
 var config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 // initialize AWS
-AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile: config.awsConfig.credentialProfile });
+if (config.awsConfig.credentialProfile)
+    AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile: config.awsConfig.credentialProfile });
 AWS.config.update({ region: config.awsConfig.region });
 var store = new settingsStore_1.SettingsStore(config.settingsFile);
 store.load()

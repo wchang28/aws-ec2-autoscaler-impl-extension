@@ -17,7 +17,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
     /setup/worker_characteristic/get_subnet_id
     /setup/worker_characteristic/set_subnet_id
 */
-var WorkerCharacteristicSetup = (function () {
+var WorkerCharacteristicSetup = /** @class */ (function () {
     function WorkerCharacteristicSetup(api) {
         this.api = api;
     }
@@ -34,7 +34,7 @@ var WorkerCharacteristicSetup = (function () {
     WorkerCharacteristicSetup.prototype.setSubnetId = function (value) { return this.api.$J("POST", '/set_subnet_id', { value: value }); };
     return WorkerCharacteristicSetup;
 }());
-var ImplementationSetup = (function () {
+var ImplementationSetup = /** @class */ (function () {
     function ImplementationSetup(api) {
         this.api = api;
     }
@@ -48,7 +48,7 @@ var ImplementationSetup = (function () {
     });
     return ImplementationSetup;
 }());
-var Implementation = (function () {
+var Implementation = /** @class */ (function () {
     function Implementation(api) {
         this.api = api;
     }

@@ -25,7 +25,7 @@ let configFile = process.argv[2];
 let config: IAppConfig = JSON.parse(fs.readFileSync(configFile, 'utf8'));
 
 // initialize AWS
-AWS.config.credentials = new AWS.SharedIniFileCredentials({profile: config.awsConfig.credentialProfile});
+if (config.awsConfig.credentialProfile) AWS.config.credentials = new AWS.SharedIniFileCredentials({profile: config.awsConfig.credentialProfile});
 AWS.config.update({region: config.awsConfig.region});
 
 let store = new SettingsStore(config.settingsFile);
