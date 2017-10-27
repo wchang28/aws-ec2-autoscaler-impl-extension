@@ -91,12 +91,13 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
         return handler.bind(this);
     }
 
-    private getTextFieldChangeButtonClickHandler(fieldLabel: string, currentValue: string, setValueProc: (value: string) => Promise<string>) : (e: React.MouseEvent<HTMLButtonElement>) => void {
+    private getTextFieldChangeButtonClickHandler(fieldLabel: string, currentValue: string, setValueProc: (value: string) => Promise<string>, nullable: boolean = false) : (e: React.MouseEvent<HTMLButtonElement>) => void {
         let handler = (e: React.MouseEvent<HTMLButtonElement>) => {
             let s = prompt("New " + fieldLabel + ":", currentValue);
             if (s !== null) {
                 s = s.trim();
-                if (s) {
+                let setValue = (nullable || (s ? true : false));
+                if (setValue) {
                     let p: Promise<string> = setValueProc(s)
                     p.then((value: string) => {
                         console.log("value set="+ JSON.stringify(value));
@@ -160,7 +161,7 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                                 <tr>
                                     <td>IAM Role Name</td>
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null}</td>
-                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("IAM Role Name", (this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null), this.Implementation.Setup.WorkerCharacteristic.setIAMRoleName.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("IAM Role Name", (this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null), this.Implementation.Setup.WorkerCharacteristic.setIAMRoleName.bind(this.Implementation.Setup.WorkerCharacteristic), true)}>Change...</button></td>
                                 </tr>
                             </tbody>
                         </table>

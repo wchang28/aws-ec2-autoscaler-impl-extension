@@ -101,12 +101,14 @@ var ImplApp = /** @class */ (function (_super) {
         };
         return handler.bind(this);
     };
-    ImplApp.prototype.getTextFieldChangeButtonClickHandler = function (fieldLabel, currentValue, setValueProc) {
+    ImplApp.prototype.getTextFieldChangeButtonClickHandler = function (fieldLabel, currentValue, setValueProc, nullable) {
+        if (nullable === void 0) { nullable = false; }
         var handler = function (e) {
             var s = prompt("New " + fieldLabel + ":", currentValue);
             if (s !== null) {
                 s = s.trim();
-                if (s) {
+                var setValue = (nullable || (s ? true : false));
+                if (setValue) {
                     var p = setValueProc(s);
                     p.then(function (value) {
                         console.log("value set=" + JSON.stringify(value));
@@ -167,7 +169,7 @@ var ImplApp = /** @class */ (function (_super) {
                                 React.createElement("td", null, "IAM Role Name"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("IAM Role Name", (this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null), this.Implementation.Setup.WorkerCharacteristic.setIAMRoleName.bind(this.Implementation.Setup.WorkerCharacteristic)) }, "Change...")))))))));
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("IAM Role Name", (this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null), this.Implementation.Setup.WorkerCharacteristic.setIAMRoleName.bind(this.Implementation.Setup.WorkerCharacteristic), true) }, "Change...")))))))));
     };
     return ImplApp;
 }(React.Component));
