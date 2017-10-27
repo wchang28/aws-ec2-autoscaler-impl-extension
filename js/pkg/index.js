@@ -30,6 +30,8 @@ var clientOptions = { reconnetIntervalMS: 5000 };
     /services/setup/worker_characteristic/set_security_group_id
     /services/setup/worker_characteristic/get_subnet_id
     /services/setup/worker_characteristic/set_subnet_id
+    /services/setup/worker_characteristic/get_iam_role_name
+    /services/setup/worker_characteristic/set_iam_role_name
 */
 var ImplementationProxy = /** @class */ (function () {
     function ImplementationProxy(access, onChange) {
@@ -78,6 +80,8 @@ var ImplementationProxy = /** @class */ (function () {
     /setup/worker_characteristic/set_security_group_id
     /setup/worker_characteristic/get_subnet_id
     /setup/worker_characteristic/set_subnet_id
+    /setup/worker_characteristic/get_iam_role_name
+    /setup/worker_characteristic/set_iam_role_name
 */
 // factory function
 var factory = function (getImpl, access, onChange) {
@@ -130,6 +134,12 @@ var factory = function (getImpl, access, onChange) {
     }));
     wcRouter.post('/set_subnet_id', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
         return impl.Setup.WorkerCharacteristic.setSubnetId(req.body.value);
+    }));
+    wcRouter.get('/get_iam_role_name', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.getIAMRoleName();
+    }));
+    wcRouter.post('/set_iam_role_name', grid_autoscaler_impl_pkg_1.getRequestHandlerForImplementation(getImpl, function (req, impl) {
+        return impl.Setup.WorkerCharacteristic.setIAMRoleName(req.body.value);
     }));
     var impl = new ImplementationProxy(access, onChange);
     return Promise.resolve([impl, implApiRouter]);
