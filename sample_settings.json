@@ -7,5 +7,6 @@
         ,"ImageId": "{some-image-id}"
         ,"SecurityGroupId": "{some-security-group-id}"
         ,"SubnetId": "{some-subnet-id}"
+        ,"IAMRoleName": "{some-IAM-role-name}"
     }
 }

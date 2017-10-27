@@ -157,6 +157,11 @@ class ImplApp extends React.Component<ImplAppProps, ImplAppState> {
                                     <td>{this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null}</td>
                                     <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("Subnet Id", (this.Setup ? this.Setup.WorkerCharacteristic.SubnetId : null), this.Implementation.Setup.WorkerCharacteristic.setSubnetId.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
                                 </tr>
+                                <tr>
+                                    <td>IAM Role Name</td>
+                                    <td>{this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null}</td>
+                                    <td><button disabled={!this.CanChangeField} onClick={this.getTextFieldChangeButtonClickHandler("IAM Role Name", (this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null), this.Implementation.Setup.WorkerCharacteristic.setIAMRoleName.bind(this.Implementation.Setup.WorkerCharacteristic))}>Change...</button></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

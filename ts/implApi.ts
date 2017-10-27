@@ -19,6 +19,8 @@ import {ApiCore, GridMessage} from "grid-client-core";
     /setup/worker_characteristic/set_security_group_id
     /setup/worker_characteristic/get_subnet_id
     /setup/worker_characteristic/set_subnet_id
+    /setup/worker_characteristic/get_iam_role_name
+    /setup/worker_characteristic/set_iam_role_name
 */
 
 class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
@@ -34,6 +36,8 @@ class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
     setSecurityGroupId(value: string): Promise<string> {return this.api.$J("POST", '/set_security_group_id', {value});}
     getSubnetId(): Promise<string> {return this.api.$J("GET", '/get_subnet_id', {});}
     setSubnetId(value: string): Promise<string> {return this.api.$J("POST", '/set_subnet_id', {value});}
+    getIAMRoleName(): Promise<string> {return this.api.$J("GET", '/get_iam_role_name', {});}
+    setIAMRoleName(value: string): Promise<string> {return this.api.$J("POST", '/set_iam_role_name', {value});}
 }
 
 class ImplementationSetup implements IImplementationSetup {

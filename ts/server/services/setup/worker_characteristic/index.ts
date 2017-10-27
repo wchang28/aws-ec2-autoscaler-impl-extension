@@ -19,6 +19,8 @@ export {router as Router};
     /services/setup/worker_characteristic/set_security_group_id
     /services/setup/worker_characteristic/get_subnet_id
     /services/setup/worker_characteristic/set_subnet_id
+    /setup/worker_characteristic/get_iam_role_name
+    /setup/worker_characteristic/set_iam_role_name
  */
 
 router.get('/', getReqestHandler((impl: EC2Implementation, req: express.Request) => Promise.resolve<any>(impl.WorkerCharacteristic)));
@@ -47,4 +49,10 @@ router.get('/get_subnet_id', getReqestHandler((impl: EC2Implementation, req: exp
 router.post('/set_subnet_id', getReqestHandler((impl: EC2Implementation, req: express.Request) => {
     impl.WorkerCharacteristic.SubnetId = req.body.value;
     return Promise.resolve<any>(impl.WorkerCharacteristic.SubnetId);
+}));
+
+router.get('/get_iam_role_name', getReqestHandler((impl: EC2Implementation, req: express.Request) => Promise.resolve<any>(impl.WorkerCharacteristic.IAMRoleName)));
+router.post('/set_iam_role_name', getReqestHandler((impl: EC2Implementation, req: express.Request) => {
+    impl.WorkerCharacteristic.IAMRoleName = req.body.value;
+    return Promise.resolve<any>(impl.WorkerCharacteristic.IAMRoleName);
 }));

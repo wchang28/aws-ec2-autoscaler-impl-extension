@@ -16,6 +16,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
     /setup/worker_characteristic/set_security_group_id
     /setup/worker_characteristic/get_subnet_id
     /setup/worker_characteristic/set_subnet_id
+    /setup/worker_characteristic/get_iam_role_name
+    /setup/worker_characteristic/set_iam_role_name
 */
 var WorkerCharacteristicSetup = /** @class */ (function () {
     function WorkerCharacteristicSetup(api) {
@@ -32,6 +34,8 @@ var WorkerCharacteristicSetup = /** @class */ (function () {
     WorkerCharacteristicSetup.prototype.setSecurityGroupId = function (value) { return this.api.$J("POST", '/set_security_group_id', { value: value }); };
     WorkerCharacteristicSetup.prototype.getSubnetId = function () { return this.api.$J("GET", '/get_subnet_id', {}); };
     WorkerCharacteristicSetup.prototype.setSubnetId = function (value) { return this.api.$J("POST", '/set_subnet_id', { value: value }); };
+    WorkerCharacteristicSetup.prototype.getIAMRoleName = function () { return this.api.$J("GET", '/get_iam_role_name', {}); };
+    WorkerCharacteristicSetup.prototype.setIAMRoleName = function (value) { return this.api.$J("POST", '/set_iam_role_name', { value: value }); };
     return WorkerCharacteristicSetup;
 }());
 var ImplementationSetup = /** @class */ (function () {
