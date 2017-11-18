@@ -49,7 +49,7 @@ store.load()
             next();
         else {
             let not_authorized_err = {error: "not-authorized"};
-            let authHeader: string = req.headers["authorization"];
+            let authHeader: string = <string>(req.headers["authorization"]);
             if (!authHeader)
                 res.status(400).json(not_authorized_err);
             else {

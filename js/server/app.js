@@ -39,7 +39,7 @@ store.load()
             next();
         else {
             var not_authorized_err = { error: "not-authorized" };
-            var authHeader = req.headers["authorization"];
+            var authHeader = (req.headers["authorization"]);
             if (!authHeader)
                 res.status(400).json(not_authorized_err);
             else {
