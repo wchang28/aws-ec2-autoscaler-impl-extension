@@ -21,6 +21,8 @@ export {router as Router};
     /services/setup/worker_characteristic/set_subnet_id
     /setup/worker_characteristic/get_iam_role_name
     /setup/worker_characteristic/set_iam_role_name
+    /setup/worker_characteristic/get_name_tag
+    /setup/worker_characteristic/set_name_tag
  */
 
 router.get('/', getReqestHandler((impl: EC2Implementation, req: express.Request) => Promise.resolve<any>(impl.WorkerCharacteristic)));

@@ -19,6 +19,8 @@ exports.Router = router;
     /services/setup/worker_characteristic/set_subnet_id
     /setup/worker_characteristic/get_iam_role_name
     /setup/worker_characteristic/set_iam_role_name
+    /setup/worker_characteristic/get_name_tag
+    /setup/worker_characteristic/set_name_tag
  */
 router.get('/', requestData_1.getReqestHandler(function (impl, req) { return Promise.resolve(impl.WorkerCharacteristic); }));
 router.get('/get_key_name', requestData_1.getReqestHandler(function (impl, req) { return Promise.resolve(impl.WorkerCharacteristic.KeyName); }));
