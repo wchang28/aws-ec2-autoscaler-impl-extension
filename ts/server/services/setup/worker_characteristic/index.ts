@@ -56,3 +56,9 @@ router.post('/set_iam_role_name', getReqestHandler((impl: EC2Implementation, req
     impl.WorkerCharacteristic.IAMRoleName = req.body.value;
     return Promise.resolve<any>(impl.WorkerCharacteristic.IAMRoleName);
 }));
+
+router.get('/get_name_tag', getReqestHandler((impl: EC2Implementation, req: express.Request) => Promise.resolve<any>(impl.WorkerCharacteristic.NameTag)));
+router.post('/set_name_tag', getReqestHandler((impl: EC2Implementation, req: express.Request) => {
+    impl.WorkerCharacteristic.NameTag = req.body.value;
+    return Promise.resolve<any>(impl.WorkerCharacteristic.NameTag);
+}));

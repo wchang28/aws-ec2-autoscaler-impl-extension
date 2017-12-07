@@ -169,7 +169,12 @@ var ImplApp = /** @class */ (function (_super) {
                                 React.createElement("td", null, "IAM Role Name"),
                                 React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null),
                                 React.createElement("td", null,
-                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("IAM Role Name", (this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null), this.Implementation.Setup.WorkerCharacteristic.setIAMRoleName.bind(this.Implementation.Setup.WorkerCharacteristic), true) }, "Change...")))))))));
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("IAM Role Name", (this.Setup ? this.Setup.WorkerCharacteristic.IAMRoleName : null), this.Implementation.Setup.WorkerCharacteristic.setIAMRoleName.bind(this.Implementation.Setup.WorkerCharacteristic), true) }, "Change..."))),
+                            React.createElement("tr", null,
+                                React.createElement("td", null, "Name Tag"),
+                                React.createElement("td", null, this.Setup ? this.Setup.WorkerCharacteristic.NameTag : null),
+                                React.createElement("td", null,
+                                    React.createElement("button", { disabled: !this.CanChangeField, onClick: this.getTextFieldChangeButtonClickHandler("Name Tag", (this.Setup ? this.Setup.WorkerCharacteristic.NameTag : null), this.Implementation.Setup.WorkerCharacteristic.setNameTag.bind(this.Implementation.Setup.WorkerCharacteristic), true) }, "Change...")))))))));
     };
     return ImplApp;
 }(React.Component));

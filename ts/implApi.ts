@@ -38,6 +38,8 @@ class WorkerCharacteristicSetup implements IWorkerCharacteristicSetup {
     setSubnetId(value: string): Promise<string> {return this.api.$J("POST", '/set_subnet_id', {value});}
     getIAMRoleName(): Promise<string> {return this.api.$J("GET", '/get_iam_role_name', {});}
     setIAMRoleName(value: string): Promise<string> {return this.api.$J("POST", '/set_iam_role_name', {value});}
+    getNameTag(): Promise<string> {return this.api.$J("GET", '/get_name_tag', {});}
+    setNameTag(value: string): Promise<string> {return this.api.$J("POST", '/set_name_tag', {value});}
 }
 
 class ImplementationSetup implements IImplementationSetup {

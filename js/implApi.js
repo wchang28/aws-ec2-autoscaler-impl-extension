@@ -36,6 +36,8 @@ var WorkerCharacteristicSetup = /** @class */ (function () {
     WorkerCharacteristicSetup.prototype.setSubnetId = function (value) { return this.api.$J("POST", '/set_subnet_id', { value: value }); };
     WorkerCharacteristicSetup.prototype.getIAMRoleName = function () { return this.api.$J("GET", '/get_iam_role_name', {}); };
     WorkerCharacteristicSetup.prototype.setIAMRoleName = function (value) { return this.api.$J("POST", '/set_iam_role_name', { value: value }); };
+    WorkerCharacteristicSetup.prototype.getNameTag = function () { return this.api.$J("GET", '/get_name_tag', {}); };
+    WorkerCharacteristicSetup.prototype.setNameTag = function (value) { return this.api.$J("POST", '/set_name_tag', { value: value }); };
     return WorkerCharacteristicSetup;
 }());
 var ImplementationSetup = /** @class */ (function () {

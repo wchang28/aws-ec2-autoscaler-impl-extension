@@ -51,3 +51,8 @@ router.post('/set_iam_role_name', requestData_1.getReqestHandler(function (impl,
     impl.WorkerCharacteristic.IAMRoleName = req.body.value;
     return Promise.resolve(impl.WorkerCharacteristic.IAMRoleName);
 }));
+router.get('/get_name_tag', requestData_1.getReqestHandler(function (impl, req) { return Promise.resolve(impl.WorkerCharacteristic.NameTag); }));
+router.post('/set_name_tag', requestData_1.getReqestHandler(function (impl, req) {
+    impl.WorkerCharacteristic.NameTag = req.body.value;
+    return Promise.resolve(impl.WorkerCharacteristic.NameTag);
+}));

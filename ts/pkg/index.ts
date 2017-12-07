@@ -37,6 +37,8 @@ let clientOptions: rcf.IMessageClientOptions = {reconnetIntervalMS: 5000};
     /services/setup/worker_characteristic/set_subnet_id
     /services/setup/worker_characteristic/get_iam_role_name
     /services/setup/worker_characteristic/set_iam_role_name
+    /services/setup/worker_characteristic/get_name_tag
+    /services/setup/worker_characteristic/set_name_tag
 */
 
 class ImplementationProxy implements IAutoScalerImplementation {
@@ -87,6 +89,8 @@ class ImplementationProxy implements IAutoScalerImplementation {
     /setup/worker_characteristic/set_subnet_id
     /setup/worker_characteristic/get_iam_role_name
     /setup/worker_characteristic/set_iam_role_name
+    /setup/worker_characteristic/get_name_tag
+    /setup/worker_characteristic/set_name_tag
 */
 
 // factory function
@@ -150,6 +154,12 @@ let factory: AutoScalerImplementationFactory = (getImpl: GetAutoScalerImplementa
     }));
     wcRouter.post('/set_iam_role_name', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
         return impl.Setup.WorkerCharacteristic.setIAMRoleName(req.body.value);
+    }));
+    wcRouter.get('/get_name_tag', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
+        return impl.Setup.WorkerCharacteristic.getNameTag();
+    }));
+    wcRouter.post('/set_name_tag', getRequestHandlerForImplementation(getImpl, (req: express.Request, impl: ImplementationProxy) => {
+        return impl.Setup.WorkerCharacteristic.setNameTag(req.body.value);
     }));
 
     let impl = new ImplementationProxy(access, onChange);
