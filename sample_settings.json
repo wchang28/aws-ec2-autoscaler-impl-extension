@@ -8,5 +8,6 @@
         ,"SecurityGroupId": "{some-security-group-id}"
         ,"SubnetId": "{some-subnet-id}"
         ,"IAMRoleName": "{some-IAM-role-name}"
+        ,"NameTag": "{some-name-tag}"
     }
 }
